@@ -2,8 +2,6 @@ package io.github.gunjiro.hj.command;
 
 import java.util.List;
 
-import io.github.gunjiro.hj.ExitException;
-
 public class LoadCommand implements Command {
     private final List<String> resourceNames;
 
@@ -16,7 +14,7 @@ public class LoadCommand implements Command {
     }
 
     @Override
-    public <R> R accept(Command.Visitor<R> visitor) throws ExitException {
+    public <R> R accept(Command.Visitor<R> visitor) {
         return visitor.visit(this);
     }
 }

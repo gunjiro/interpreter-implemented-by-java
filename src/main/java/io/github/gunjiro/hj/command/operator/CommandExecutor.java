@@ -1,6 +1,5 @@
 package io.github.gunjiro.hj.command.operator;
 
-import io.github.gunjiro.hj.ExitException;
 import io.github.gunjiro.hj.command.Command;
 import io.github.gunjiro.hj.command.EmptyCommand;
 import io.github.gunjiro.hj.command.LoadCommand;
@@ -22,34 +21,31 @@ public class CommandExecutor {
     }
 
     public void execute(Command command) {
-        try {
-            command.accept(new Command.Visitor<Void>() {
+        command.accept(new Command.Visitor<Void>() {
 
-                @Override
-                public Void visit(EmptyCommand command) {
-                    implementor.execute(command);
-                    return null;
-                }
+            @Override
+            public Void visit(EmptyCommand command) {
+                implementor.execute(command);
+                return null;
+            }
 
-                @Override
-                public Void visit(QuitCommand command) {
-                    implementor.execute(command);
-                    return null;
-                }
+            @Override
+            public Void visit(QuitCommand command) {
+                implementor.execute(command);
+                return null;
+            }
 
-                @Override
-                public Void visit(LoadCommand command) {
-                    implementor.execute(command);
-                    return null;
-                }
+            @Override
+            public Void visit(LoadCommand command) {
+                implementor.execute(command);
+                return null;
+            }
 
-                @Override
-                public Void visit(UnknownCommand command) {
-                    implementor.execute(command);
-                    return null;
-                }
-            });
-        } catch (ExitException e) {
-        }
+            @Override
+            public Void visit(UnknownCommand command) {
+                implementor.execute(command);
+                return null;
+            }
+        });
     }
 }

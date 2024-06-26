@@ -1,7 +1,5 @@
 package io.github.gunjiro.hj.command;
 
-import io.github.gunjiro.hj.ExitException;
-
 public class UnknownCommand implements Command {
     private final String commandName;
 
@@ -14,7 +12,7 @@ public class UnknownCommand implements Command {
     }
 
     @Override
-    public <R> R accept(Command.Visitor<R> visitor) throws ExitException {
+    public <R> R accept(Command.Visitor<R> visitor) {
         return visitor.visit(this);
     }
 }

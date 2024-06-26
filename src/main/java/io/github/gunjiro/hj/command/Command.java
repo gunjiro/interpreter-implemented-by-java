@@ -1,9 +1,7 @@
 package io.github.gunjiro.hj.command;
 
-import io.github.gunjiro.hj.ExitException;
-
 public interface Command {
-    public <R> R accept(Visitor<R> visitor) throws ExitException;
+    public <R> R accept(Visitor<R> visitor);
 
     public static interface Visitor<R> {
         public R visit(EmptyCommand command);
