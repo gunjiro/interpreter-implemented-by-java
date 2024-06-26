@@ -3,7 +3,6 @@ package io.github.gunjiro.hj.command.operator;
 import java.util.LinkedList;
 import java.util.List;
 
-import io.github.gunjiro.hj.ExitException;
 import io.github.gunjiro.hj.command.QuitCommand;
 
 class QuitCommandAction {
@@ -33,9 +32,8 @@ class QuitCommandAction {
         observers.add(observer);
     }
 
-    public void take(QuitCommand command) throws ExitException {
+    public void take(QuitCommand command) {
         notifyQuitAll();
-        throw new ExitException();
     }
 
     private void notifyQuitAll() {

@@ -54,11 +54,8 @@ public class AppCommandOperator implements CommandOperator {
     }
 
     private void operate(QuitCommand command) {
-        try {
-            createQuitCommandAction().take(command);
-        } catch (ExitException e) {
-            isExited = true;
-        }
+        createQuitCommandAction().take(command);
+        isExited = true;
     }
 
     private void operate(LoadCommand command) {

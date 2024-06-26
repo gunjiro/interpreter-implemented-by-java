@@ -5,7 +5,6 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-import io.github.gunjiro.hj.ExitException;
 import io.github.gunjiro.hj.command.QuitCommand;
 
 public class QuitCommandActionTest {
@@ -23,10 +22,7 @@ public class QuitCommandActionTest {
             }
             
         });
-        try {
-            action.take(new QuitCommand());
-        } catch (ExitException e) {
-        }
+        action.take(new QuitCommand());
 
         assertThat(output.toString(), is("☆☆☆☆☆ quit ☆☆☆☆☆"));
     }
