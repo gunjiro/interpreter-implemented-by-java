@@ -32,7 +32,7 @@ public class CommandExecutor {
                 }
 
                 @Override
-                public Void visit(QuitCommand command) throws ExitException {
+                public Void visit(QuitCommand command) {
                     implementor.execute(command);
                     return null;
                 }

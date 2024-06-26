@@ -7,7 +7,7 @@ public interface Command {
 
     public static interface Visitor<R> {
         public R visit(EmptyCommand command);
-        public R visit(QuitCommand command) throws ExitException;
+        public R visit(QuitCommand command);
         public R visit(LoadCommand command);
         public R visit(UnknownCommand command);
     }
