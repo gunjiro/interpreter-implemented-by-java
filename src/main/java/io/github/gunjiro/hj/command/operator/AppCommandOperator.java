@@ -15,6 +15,7 @@ public class AppCommandOperator implements CommandOperator {
     }
 
     private final Implementor implementor;
+    private boolean isExited = false;
 
     public AppCommandOperator(Implementor implementor) {
         this.implementor = implementor;
@@ -22,35 +23,46 @@ public class AppCommandOperator implements CommandOperator {
 
     @Override
     public void operate(Command command) throws ExitException {
-        command.accept(new Command.Visitor<Void>() {
+        final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
 
             @Override
-            public Void visit(EmptyCommand command) {
-                return null;
+            public void execute(EmptyCommand command) {
             }
 
             @Override
-            public Void visit(QuitCommand command) throws ExitException {
+            public void execute(QuitCommand command) {
                 operate(command);
-                return null;
             }
 
             @Override
-            public Void visit(LoadCommand command) {
+            public void execute(LoadCommand command) {
                 operate(command);
-                return null;
             }
 
             @Override
-            public Void visit(UnknownCommand command) {
+            public void execute(UnknownCommand command) {
                 operate(command);
-                return null;
             }
+
+            @Override
+            public void exit() {
+            }
+            
         });
+
+        executor.execute(command);
+
+        if (isExited) {
+            throw new ExitException();
+        }
     }
 
-    private void operate(QuitCommand command) throws ExitException {
-        createQuitCommandAction().take(command);
+    private void operate(QuitCommand command) {
+        try {
+            createQuitCommandAction().take(command);
+        } catch (ExitException e) {
+            isExited = true;
+        }
     }
 
     private void operate(LoadCommand command) {
