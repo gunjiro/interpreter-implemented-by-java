@@ -67,7 +67,7 @@ public class AppCommandOperator implements CommandOperator {
     }
 
     private QuitCommandAction createQuitCommandAction() {
-        return new QuitCommandAction();
+        return QuitCommandAction.create();
     }
 
     private LoadCommandAction createLoadCommandAction() {

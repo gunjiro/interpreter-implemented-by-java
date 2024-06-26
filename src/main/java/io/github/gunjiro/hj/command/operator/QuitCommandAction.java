@@ -8,10 +8,6 @@ import io.github.gunjiro.hj.command.QuitCommand;
 class QuitCommandAction {
     private final List<Observer> observers;
 
-    public QuitCommandAction() {
-        this(newObservers());
-    }
-
     private QuitCommandAction(List<Observer> observers) {
         this.observers = observers;
     }
