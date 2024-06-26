@@ -19,7 +19,6 @@ public class CommandExecutor {
         public void execute(QuitCommand command);
         public void execute(LoadCommand command);
         public void execute(UnknownCommand command);
-        public void exit();
     }
 
     public void execute(Command command) {
@@ -51,7 +50,6 @@ public class CommandExecutor {
                 }
             });
         } catch (ExitException e) {
-            implementor.exit();
         }
     }
 }

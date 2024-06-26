@@ -43,10 +43,6 @@ public class AppCommandOperator implements CommandOperator {
             public void execute(UnknownCommand command) {
                 operate(command);
             }
-
-            @Override
-            public void exit() {
-            }
             
         });
 
