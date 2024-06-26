@@ -55,7 +55,6 @@ public class AppCommandOperator implements CommandOperator {
 
     private void operate(QuitCommand command) {
         createQuitCommandAction().take(command);
-        isExited = true;
     }
 
     private void operate(LoadCommand command) {
@@ -67,7 +66,16 @@ public class AppCommandOperator implements CommandOperator {
     }
 
     private QuitCommandAction createQuitCommandAction() {
-        return QuitCommandAction.create();
+        final QuitCommandAction action = QuitCommandAction.create();
+        action.addObserver(new QuitCommandAction.Observer() {
+
+            @Override
+            public void notifyQuit() {
+                isExited = true;
+            }
+            
+        });
+        return action;
     }
 
     private LoadCommandAction createLoadCommandAction() {
