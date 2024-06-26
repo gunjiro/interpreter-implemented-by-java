@@ -8,6 +8,10 @@ import io.github.gunjiro.hj.command.QuitCommand;
 class QuitCommandAction {
     private final List<Observer> observers;
 
+    public static interface Observer {
+        public void notifyQuit();
+    }
+
     private QuitCommandAction(List<Observer> observers) {
         this.observers = observers;
     }
@@ -18,10 +22,6 @@ class QuitCommandAction {
 
     private static List<Observer> newObservers() {
         return new LinkedList<Observer>();
-    }
-
-    public static interface Observer {
-        public void notifyQuit();
     }
 
     public void addObserver(Observer observer) {
