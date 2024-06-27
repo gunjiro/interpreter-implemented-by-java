@@ -3,6 +3,9 @@ package io.github.gunjiro.hj;
 import java.io.IOError;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.LinkedList;
+import java.util.List;
+
 import io.github.gunjiro.hj.command.CommandAnalyzer;
 import io.github.gunjiro.hj.command.operator.AppCommandOperator;
 
@@ -11,6 +14,11 @@ public class AppRequestOperator implements RequestOperator {
     private final ResourceProvider provider;
     private final StringPrinter strinngPrinter;
     private final MessagePrinter messagePrinter;
+    private final List<Observer> observers = new LinkedList<>();
+
+    public static interface Observer {
+        public void notifyQuit();
+    }
 
     private AppRequestOperator(RequestActionFactory factory, ResourceProvider provider, StringPrinter strinngPrinter, MessagePrinter messagePrinter) {
         this.factory = factory;
@@ -21,6 +29,10 @@ public class AppRequestOperator implements RequestOperator {
 
     public static RequestOperator create(ResourceProvider provider, StringPrinter strinngPrinter, MessagePrinter messagePrinter) {
         return new AppRequestOperator(new RequestActionFactory(), provider, strinngPrinter, messagePrinter);
+    }
+
+    public void addObserver(Observer observer) {
+        observers.add(observer);
     }
 
     @Override
