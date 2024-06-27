@@ -31,12 +31,6 @@ public class AppCommandOperator implements CommandOperator {
         observers.add(observer);
     }
 
-    private void notifyQuitAll() {
-        for (Observer observer : observers) {
-            observer.notifyQuit();
-        }
-    }
-
     @Override
     public void operate(Command command) {
         final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
@@ -79,14 +73,16 @@ public class AppCommandOperator implements CommandOperator {
 
     private QuitCommandAction createQuitCommandAction() {
         final QuitCommandAction action = QuitCommandAction.create();
-        action.addObserver(new QuitCommandAction.Observer() {
+        for (Observer observer : observers) {
+            action.addObserver(new QuitCommandAction.Observer() {
 
-            @Override
-            public void notifyQuit() {
-                notifyQuitAll();
-            }
-            
-        });
+                @Override
+                public void notifyQuit() {
+                    observer.notifyQuit();
+                }
+
+            });
+        }
         return action;
     }
 
