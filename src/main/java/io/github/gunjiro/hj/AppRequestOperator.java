@@ -3,15 +3,10 @@ package io.github.gunjiro.hj;
 import java.io.IOError;
 import java.io.IOException;
 import java.io.Reader;
-import io.github.gunjiro.hj.command.Command;
 import io.github.gunjiro.hj.command.CommandAnalyzer;
 import io.github.gunjiro.hj.command.operator.AppCommandOperator;
 
 public class AppRequestOperator implements RequestOperator {
-    public static interface Implementor {
-        public void operate(Command command) throws ExitException;
-    }
-
     private final RequestActionFactory factory;
     private final ResourceProvider provider;
     private final StringPrinter strinngPrinter;
