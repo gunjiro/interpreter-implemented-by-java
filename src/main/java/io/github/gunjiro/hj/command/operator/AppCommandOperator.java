@@ -3,7 +3,6 @@ package io.github.gunjiro.hj.command.operator;
 import java.util.LinkedList;
 import java.util.List;
 
-import io.github.gunjiro.hj.ExitException;
 import io.github.gunjiro.hj.UnknownCommandAction;
 import io.github.gunjiro.hj.command.Command;
 import io.github.gunjiro.hj.command.EmptyCommand;
@@ -14,7 +13,6 @@ import io.github.gunjiro.hj.command.UnknownCommand;
 public class AppCommandOperator implements CommandOperator {
     private final Implementor implementor;
     private final List<Observer> observers = new LinkedList<>();
-    private boolean isExited = false;
 
     public static interface Implementor {
         public void showMessage(String message);
@@ -40,7 +38,7 @@ public class AppCommandOperator implements CommandOperator {
     }
 
     @Override
-    public void operate(Command command) throws ExitException {
+    public void operate(Command command) {
         final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
 
             @Override
@@ -65,10 +63,6 @@ public class AppCommandOperator implements CommandOperator {
         });
 
         executor.execute(command);
-
-        if (isExited) {
-            throw new ExitException();
-        }
     }
 
     private void operate(QuitCommand command) {
@@ -90,7 +84,6 @@ public class AppCommandOperator implements CommandOperator {
             @Override
             public void notifyQuit() {
                 notifyQuitAll();
-                isExited = true;
             }
             
         });

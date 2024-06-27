@@ -3,11 +3,9 @@ package io.github.gunjiro.hj;
 import java.io.IOError;
 import java.io.IOException;
 import java.io.Reader;
-
 import io.github.gunjiro.hj.command.Command;
 import io.github.gunjiro.hj.command.CommandAnalyzer;
 import io.github.gunjiro.hj.command.operator.AppCommandOperator;
-import io.github.gunjiro.hj.command.operator.CommandOperator;
 
 public class AppRequestOperator implements RequestOperator {
     public static interface Implementor {
@@ -33,6 +31,8 @@ public class AppRequestOperator implements RequestOperator {
     @Override
     public void operate(Environment environment, Request request) throws ExitException {
         request.accept(new Request.Visitor<Void>() {
+            private boolean isExited = false;
+
             @Override
             public Void visit(EmptyRequest request) {
                 return null;
@@ -40,8 +40,7 @@ public class AppRequestOperator implements RequestOperator {
 
             @Override
             public Void visit(CommandRequest request) throws ExitException {
-                final CommandAnalyzer analyzer = new CommandAnalyzer();
-                final CommandOperator operator = new AppCommandOperator(new AppCommandOperator.Implementor() {
+                final AppCommandOperator operator = new AppCommandOperator(new AppCommandOperator.Implementor() {
                     @Override
                     public void showMessage(String message) {
                         messagePrinter.printMessage(message);
@@ -62,7 +61,22 @@ public class AppRequestOperator implements RequestOperator {
                     }
 
                 });
+                operator.addObserver(new AppCommandOperator.Observer() {
+
+                    @Override
+                    public void notifyQuit() {
+                        isExited = true;
+                    }
+                    
+                });
+
+                final CommandAnalyzer analyzer = new CommandAnalyzer();
                 operator.operate(analyzer.analyze(request.getInput()));
+
+                if (isExited) {
+                    throw new ExitException();
+                }
+
                 return null;
             }
 
