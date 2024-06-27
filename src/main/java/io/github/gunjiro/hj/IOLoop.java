@@ -2,27 +2,41 @@ package io.github.gunjiro.hj;
 public class IOLoop {
     private final RequestFactory factory;
     private final InputReceiver receiver;
-    private final RequestOperator operator;
+    private final AppRequestOperator operator;
+    private boolean isExited = false;
 
-    private IOLoop(RequestFactory factory ,InputReceiver receiver, RequestOperator operator) {
+    private IOLoop(RequestFactory factory ,InputReceiver receiver, AppRequestOperator operator) {
         this.factory = factory;
         this.receiver = receiver;
         this.operator = operator;
     }
 
-    public static IOLoop create(InputReceiver receiver, RequestOperator operator) {
-        return new IOLoop(new RequestFactory(), receiver, operator);
+    public static IOLoop create(InputReceiver receiver, AppRequestOperator operator) {
+        final IOLoop ioLoop = new IOLoop(new RequestFactory(), receiver, operator);
+        operator.addObserver(new AppRequestOperator.Observer() {
+
+            @Override
+            public void notifyQuit() {
+                ioLoop.isExited = true;
+            }
+            
+        });
+        return ioLoop;
     }
 
     public void loop() {
-        try {
-            final Environment environment = new DefaultEnvironment();
-            while (true) {
-                String input = receiver.receive();
-                Request request = factory.createRequest(input);
+        final Environment environment = new DefaultEnvironment();
+        while (true) {
+            String input = receiver.receive();
+            Request request = factory.createRequest(input);
+            try {
                 operator.operate(environment, request);
+            } catch (ExitException e) {
             }
-        } catch (ExitException e) {
+
+            if (isExited) {
+                break;
+            }
         }
     }
 }

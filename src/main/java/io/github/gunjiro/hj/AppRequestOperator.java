@@ -28,7 +28,7 @@ public class AppRequestOperator implements RequestOperator {
         this.messagePrinter = messagePrinter;
     }
 
-    public static RequestOperator create(ResourceProvider provider, StringPrinter strinngPrinter, MessagePrinter messagePrinter) {
+    public static AppRequestOperator create(ResourceProvider provider, StringPrinter strinngPrinter, MessagePrinter messagePrinter) {
         final AppRequestOperator operator = new AppRequestOperator(new RequestActionFactory(), provider, strinngPrinter, messagePrinter);
         operator.addObserver(new Observer() {
 
