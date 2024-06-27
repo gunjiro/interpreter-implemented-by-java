@@ -15,6 +15,7 @@ public class AppRequestOperator implements RequestOperator {
     private final StringPrinter strinngPrinter;
     private final MessagePrinter messagePrinter;
     private final List<Observer> observers = new LinkedList<>();
+    private boolean isExited = false;
 
     public static interface Observer {
         public void notifyQuit();
@@ -28,7 +29,16 @@ public class AppRequestOperator implements RequestOperator {
     }
 
     public static RequestOperator create(ResourceProvider provider, StringPrinter strinngPrinter, MessagePrinter messagePrinter) {
-        return new AppRequestOperator(new RequestActionFactory(), provider, strinngPrinter, messagePrinter);
+        final AppRequestOperator operator = new AppRequestOperator(new RequestActionFactory(), provider, strinngPrinter, messagePrinter);
+        operator.addObserver(new Observer() {
+
+            @Override
+            public void notifyQuit() {
+                operator.isExited = true;
+            }
+            
+        });
+        return operator;
     }
 
     public void addObserver(Observer observer) {
@@ -38,7 +48,6 @@ public class AppRequestOperator implements RequestOperator {
     @Override
     public void operate(Environment environment, Request request) throws ExitException {
         request.accept(new Request.Visitor<Void>() {
-            private boolean isExited = false;
 
             @Override
             public Void visit(EmptyRequest request) {
@@ -68,14 +77,18 @@ public class AppRequestOperator implements RequestOperator {
                     }
 
                 });
-                operator.addObserver(new AppCommandOperator.Observer() {
 
-                    @Override
-                    public void notifyQuit() {
-                        isExited = true;
-                    }
-                    
-                });
+                for (Observer observer : observers) {
+                    operator.addObserver(new AppCommandOperator.Observer() {
+
+                        @Override
+                        public void notifyQuit() {
+                            observer.notifyQuit();
+                            isExited = true;
+                        }
+
+                    });
+                }
 
                 final CommandAnalyzer analyzer = new CommandAnalyzer();
                 operator.operate(analyzer.analyze(request.getInput()));
