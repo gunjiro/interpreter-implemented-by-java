@@ -9,13 +9,13 @@ import io.github.gunjiro.hj.InputReceiver;
 import io.github.gunjiro.hj.REPL;
 import io.github.gunjiro.hj.Request;
 import io.github.gunjiro.hj.RequestFactory;
-import io.github.gunjiro.hj.RequestOperator;
 import io.github.gunjiro.hj.SystemInInputReceiver;
 import io.github.gunjiro.hj.SystemOutMessagePrinter;
 import io.github.gunjiro.hj.SystemOutStringPrinter;
 
 class AppREPLImplementor implements REPL.Implementor {
     private final Environment environment;
+    private boolean isExited = false;
 
     private AppREPLImplementor(Environment environment) {
         this.environment = environment;
@@ -35,10 +35,10 @@ class AppREPLImplementor implements REPL.Implementor {
     public REPL.Result execute(String input) {
         try {
             operate(input);
-            return REPL.Result.Continue;
         } catch (ExitException e) {
-            return REPL.Result.Quit;
         }
+
+        return isExited ? REPL.Result.Quit : REPL.Result.Continue;
     }
 
     private void operate(String input) throws ExitException {
@@ -51,8 +51,17 @@ class AppREPLImplementor implements REPL.Implementor {
         return factory.createRequest(input);
     }
 
-    private static RequestOperator createOperator() {
-        return AppRequestOperator.create(new FileResourceProvider(), new SystemOutStringPrinter(), new SystemOutMessagePrinter());
+    private AppRequestOperator createOperator() {
+        AppRequestOperator operator = AppRequestOperator.create(new FileResourceProvider(), new SystemOutStringPrinter(), new SystemOutMessagePrinter());
+        operator.addObserver(new AppRequestOperator.Observer() {
+
+            @Override
+            public void notifyQuit() {
+                isExited = true;
+            }
+            
+        });
+        return operator;
     }
 
     @Override
