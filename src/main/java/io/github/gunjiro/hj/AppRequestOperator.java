@@ -9,7 +9,7 @@ import java.util.List;
 import io.github.gunjiro.hj.command.CommandAnalyzer;
 import io.github.gunjiro.hj.command.operator.AppCommandOperator;
 
-public class AppRequestOperator implements RequestOperator {
+public class AppRequestOperator {
     private final RequestActionFactory factory;
     private final ResourceProvider provider;
     private final StringPrinter strinngPrinter;
@@ -42,7 +42,6 @@ public class AppRequestOperator implements RequestOperator {
         observers.add(observer);
     }
 
-    @Override
     public void operate(Environment environment, Request request) {
         request.accept(new Request.Visitor<Void>() {
 
