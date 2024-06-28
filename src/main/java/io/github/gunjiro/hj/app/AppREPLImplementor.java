@@ -33,17 +33,16 @@ class AppREPLImplementor implements REPL.Implementor {
 
     @Override
     public REPL.Result execute(String input) {
-        try {
-            operate(input);
-        } catch (ExitException e) {
-        }
-
+        operate(input);
         return isExited ? REPL.Result.Quit : REPL.Result.Continue;
     }
 
-    private void operate(String input) throws ExitException {
-        final Request request = createRequest(input);
-        createOperator().operate(environment, request);
+    private void operate(String input) {
+        try {
+            final Request request = createRequest(input);
+            createOperator().operate(environment, request);
+        } catch (ExitException e) {
+        }
     }
 
     private static Request createRequest(String input) {
