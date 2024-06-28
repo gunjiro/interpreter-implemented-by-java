@@ -29,10 +29,7 @@ public class IOLoop {
         while (true) {
             String input = receiver.receive();
             Request request = factory.createRequest(input);
-            try {
-                operator.operate(environment, request);
-            } catch (ExitException e) {
-            }
+            operator.operate(environment, request);
 
             if (isExited) {
                 break;

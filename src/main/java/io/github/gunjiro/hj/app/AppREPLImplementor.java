@@ -3,7 +3,6 @@ package io.github.gunjiro.hj.app;
 import io.github.gunjiro.hj.AppRequestOperator;
 import io.github.gunjiro.hj.DefaultEnvironment;
 import io.github.gunjiro.hj.Environment;
-import io.github.gunjiro.hj.ExitException;
 import io.github.gunjiro.hj.FileResourceProvider;
 import io.github.gunjiro.hj.InputReceiver;
 import io.github.gunjiro.hj.REPL;
@@ -38,11 +37,8 @@ class AppREPLImplementor implements REPL.Implementor {
     }
 
     private void operate(String input) {
-        try {
-            final Request request = createRequest(input);
-            createOperator().operate(environment, request);
-        } catch (ExitException e) {
-        }
+        final Request request = createRequest(input);
+        createOperator().operate(environment, request);
     }
 
     private static Request createRequest(String input) {
