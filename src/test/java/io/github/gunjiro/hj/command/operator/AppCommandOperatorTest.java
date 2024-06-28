@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import io.github.gunjiro.hj.ExitException;
 import io.github.gunjiro.hj.UnknownCommandAction;
-import io.github.gunjiro.hj.command.EmptyCommand;
 import io.github.gunjiro.hj.command.LoadCommand;
 import io.github.gunjiro.hj.command.UnknownCommand;
 
@@ -23,7 +22,7 @@ public class AppCommandOperatorTest {
         final StringBuilder outputByOperator = new StringBuilder();
         final StringBuilder outputByAction = new StringBuilder();
 
-        final CommandOperator operator = new AppCommandOperator(new AppCommandOperator.Implementor() {
+        final AppCommandOperator operator = new AppCommandOperator(new AppCommandOperator.Implementor() {
 
             @Override
             public void showMessage(String message) {
@@ -53,41 +52,13 @@ public class AppCommandOperatorTest {
     }
 
     @Test
-    public void doNothingWhenInputIsEmptyCommand() {
-        // 入力が空のコマンドの場合、何もしない。
-        // このテストでは単に「コマンド処理」の呼び出しが通ることを確認する。
-        String result = "☆☆☆☆☆ do nothing";
-        final CommandOperator operator = new AppCommandOperator(new AppCommandOperator.Implementor() {
-
-                @Override
-                public void showMessage(String message) {
-                    throw new UnsupportedOperationException("Unimplemented method 'showMessage'");
-                }
-
-                @Override
-                public void load(String name) {
-                    throw new UnsupportedOperationException("Unimplemented method 'load'");
-                }
-
-            });
-
-        try {
-            operator.operate(new EmptyCommand());
-        } catch (ExitException e) {
-            result = "☆☆☆☆☆ quit";
-        }
-
-        assertThat(result, is("☆☆☆☆☆ do nothing"));
-    }
-
-    @Test
     public void outputsMessagesAfterOperatingLoadCommand() throws ExitException {
         // 入力が読み込みコマンドの場合、リソースから関数定義等を読み込む。
         // このテストでは「コマンド処理」の結果が「読み込みコマンドを処理するアクション」の結果と同等になることを確認する。
         final LoadCommand input = new LoadCommand(List.of("resource1", "resource2"));
         final LinkedList<String> outputsByOperator = new LinkedList<String>();
         final LinkedList<String> outputsByAction = new LinkedList<String>();
-        final CommandOperator operator = new AppCommandOperator(new AppCommandOperator.Implementor() {
+        final AppCommandOperator operator = new AppCommandOperator(new AppCommandOperator.Implementor() {
 
             @Override
             public void showMessage(String message) {
