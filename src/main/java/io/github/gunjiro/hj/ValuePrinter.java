@@ -6,15 +6,8 @@ public class ValuePrinter {
         public void print(String output);
     }
 
-    public ValuePrinter(StringPrinter printer) {
-        this.implementor = new Implementor() {
-
-            @Override
-            public void print(String output) {
-                printer.print(output);
-            }
-            
-        };
+    public ValuePrinter(Implementor implementor) {
+        this.implementor = implementor;
     }
 
     public void print(Value value) throws ApplicationException {

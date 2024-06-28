@@ -15,7 +15,7 @@ public class ValuePrinterTest {
         final Value value = environment.createThunk(new StringReader(code)).eval();
 
         final StringBuilder builder = new StringBuilder();
-        final ValuePrinter printer = new ValuePrinter(new StringPrinter() {
+        final ValuePrinter printer = new ValuePrinter(new ValuePrinter.Implementor() {
             @Override
             public void print(String s) {
                 builder.append(s);

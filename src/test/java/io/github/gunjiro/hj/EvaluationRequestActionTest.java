@@ -27,7 +27,7 @@ public class EvaluationRequestActionTest {
         environment.addFunctions(reader);
 
         final StringBuilder builder = new StringBuilder();
-        final EvaluationRequestAction action = new EvaluationRequestAction(new ValuePrinter(new StringPrinter() {
+        final EvaluationRequestAction action = new EvaluationRequestAction(new ValuePrinter(new ValuePrinter.Implementor() {
             @Override
             public void print(String s) {
                 builder.append(s);
@@ -50,7 +50,7 @@ public class EvaluationRequestActionTest {
         final Environment environment = new DefaultEnvironment();
 
         final StringBuilder builder = new StringBuilder();
-        final EvaluationRequestAction action = new EvaluationRequestAction(new ValuePrinter(new StringPrinter() {
+        final EvaluationRequestAction action = new EvaluationRequestAction(new ValuePrinter(new ValuePrinter.Implementor() {
             @Override
             public void print(String s) {
             }
@@ -73,7 +73,7 @@ public class EvaluationRequestActionTest {
         final Environment environment = new DefaultEnvironment();
 
         final StringBuilder builder = new StringBuilder();
-        final EvaluationRequestAction action = new EvaluationRequestAction(new ValuePrinter(new StringPrinter() {
+        final EvaluationRequestAction action = new EvaluationRequestAction(new ValuePrinter(new ValuePrinter.Implementor() {
             @Override
             public void print(String s) {
             }
