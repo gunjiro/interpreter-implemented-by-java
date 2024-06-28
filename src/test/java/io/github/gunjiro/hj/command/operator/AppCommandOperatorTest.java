@@ -2,7 +2,6 @@ package io.github.gunjiro.hj.command.operator;
 
 import org.junit.Test;
 
-import io.github.gunjiro.hj.ExitException;
 import io.github.gunjiro.hj.UnknownCommandAction;
 import io.github.gunjiro.hj.command.LoadCommand;
 import io.github.gunjiro.hj.command.UnknownCommand;
@@ -15,7 +14,7 @@ import java.util.List;
 
 public class AppCommandOperatorTest {
     @Test
-    public void outputsMessageWhenInputIsUnknownCommand() throws ExitException {
+    public void outputsMessageWhenInputIsUnknownCommand() {
         // 入力が不明なコマンドの場合、メッセージを出力する。
         // このテストでは「コマンド処理」の結果が「不明なコマンドを処理するアクション」の結果と同等になることを確認する。
         final UnknownCommand input = new UnknownCommand("☆☆☆☆☆");
@@ -52,7 +51,7 @@ public class AppCommandOperatorTest {
     }
 
     @Test
-    public void outputsMessagesAfterOperatingLoadCommand() throws ExitException {
+    public void outputsMessagesAfterOperatingLoadCommand() {
         // 入力が読み込みコマンドの場合、リソースから関数定義等を読み込む。
         // このテストでは「コマンド処理」の結果が「読み込みコマンドを処理するアクション」の結果と同等になることを確認する。
         final LoadCommand input = new LoadCommand(List.of("resource1", "resource2"));
