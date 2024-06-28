@@ -1,9 +1,20 @@
 package io.github.gunjiro.hj;
 public class ValuePrinter {
-    private final StringPrinter printer;
+    private final Implementor implementor;
+
+    public static interface Implementor {
+        public void print(String output);
+    }
 
     public ValuePrinter(StringPrinter printer) {
-        this.printer = printer;
+        this.implementor = new Implementor() {
+
+            @Override
+            public void print(String output) {
+                printer.print(output);
+            }
+            
+        };
     }
 
     public void print(Value value) throws ApplicationException {
@@ -19,20 +30,20 @@ public class ValuePrinter {
     }
 
     private void printInt(IntValue value) {
-        printer.print(String.valueOf(value.getValue()));
+        implementor.print(String.valueOf(value.getValue()));
     }
 
     private void printList(ListValue list) throws ApplicationException {
         try {
-            printer.print("[");
+            implementor.print("[");
             if (!list.isEmpty()) {
                 print(list.getHead());
                 for (list = list.getTail(); !list.isEmpty(); list = list.getTail()) {
-                    printer.print(",");
+                    implementor.print(",");
                     print(list.getHead());
                 }
             }
-            printer.print("]");
+            implementor.print("]");
         }
         catch (EvaluationException e) {
             throw new ApplicationException(e);
