@@ -18,7 +18,7 @@ public class App {
 
 class EmptyRequest implements Request {
     @Override
-    public <R> R accept(Request.Visitor<R> visitor) throws ExitException {
+    public <R> R accept(Request.Visitor<R> visitor) {
         return visitor.visit(this);
     }
 }
@@ -35,7 +35,7 @@ class CommandRequest implements Request{
     }
 
     @Override
-    public <R> R accept(Request.Visitor<R> visitor) throws ExitException {
+    public <R> R accept(Request.Visitor<R> visitor) {
         return visitor.visit(this);
     }
 }
@@ -52,7 +52,7 @@ class EvaluationRequest implements Request {
     }
 
     @Override
-    public <R> R accept(Request.Visitor<R> visitor) throws ExitException {
+    public <R> R accept(Request.Visitor<R> visitor) {
         return visitor.visit(this);
     }
 }
