@@ -44,7 +44,7 @@ public class CommandExecutor {
 
             @Override
             public void execute(QuitCommand command) {
-                createQuitCommandAction().take(command);
+                notifyObserversOfQuitEvet();
             }
 
             @Override
@@ -60,19 +60,10 @@ public class CommandExecutor {
         });
     }
 
-    private QuitCommandAction createQuitCommandAction() {
-        final QuitCommandAction action = QuitCommandAction.create();
+    private void notifyObserversOfQuitEvet() {
         for (Observer observer : observers) {
-            action.addObserver(new QuitCommandAction.Observer() {
-
-                @Override
-                public void notifyQuit() {
-                    observer.receiveQuitEvent();
-                }
-
-            });
+            observer.receiveQuitEvent();
         }
-        return action;
     }
 
     private LoadCommandAction createLoadCommandAction() {
