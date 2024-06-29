@@ -6,10 +6,10 @@ import io.github.gunjiro.hj.command.LoadCommand;
 import io.github.gunjiro.hj.command.QuitCommand;
 import io.github.gunjiro.hj.command.UnknownCommand;
 
-public class CommandExecutor {
+public class CommandOperator {
     private final Implementor implementor;
 
-    public CommandExecutor(Implementor implementor) {
+    public CommandOperator(Implementor implementor) {
         this.implementor = implementor;
     }
 

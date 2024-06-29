@@ -32,7 +32,7 @@ public class AppCommandOperator {
     }
 
     public void operate(Command command) {
-        final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
+        final CommandOperator executor = new CommandOperator(new CommandOperator.Implementor() {
 
             @Override
             public void execute(EmptyCommand command) {
