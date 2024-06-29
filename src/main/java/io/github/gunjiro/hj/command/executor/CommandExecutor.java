@@ -20,7 +20,7 @@ public class CommandExecutor {
     }
 
     public static interface Observer {
-        public void notifyQuit();
+        public void receiveQuitEvent();
     }
 
     public CommandExecutor(Implementor implementor) {
@@ -77,7 +77,7 @@ public class CommandExecutor {
 
                 @Override
                 public void notifyQuit() {
-                    observer.notifyQuit();
+                    observer.receiveQuitEvent();
                 }
 
             });
