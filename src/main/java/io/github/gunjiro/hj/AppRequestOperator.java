@@ -18,14 +18,14 @@ public class AppRequestOperator {
         public void notifyQuit();
     }
 
-    private AppRequestOperator(RequestActionFactory factory, ResourceProvider provider, StringPrinter strinngPrinter, MessagePrinter messagePrinter) {
+    private AppRequestOperator(ResourceProvider provider, StringPrinter strinngPrinter, MessagePrinter messagePrinter) {
         this.provider = provider;
         this.stringPrinter = strinngPrinter;
         this.messagePrinter = messagePrinter;
     }
 
     public static AppRequestOperator create(ResourceProvider provider, StringPrinter strinngPrinter, MessagePrinter messagePrinter) {
-        final AppRequestOperator operator = new AppRequestOperator(new RequestActionFactory(), provider, strinngPrinter, messagePrinter);
+        final AppRequestOperator operator = new AppRequestOperator(provider, strinngPrinter, messagePrinter);
         operator.addObserver(new Observer() {
 
             @Override
