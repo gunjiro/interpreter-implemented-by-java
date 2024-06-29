@@ -9,24 +9,8 @@ public class EvaluationRequestAction {
         public void printMessage(String message);
     }
 
-    public EvaluationRequestAction(ValuePrinter valuePrinter, MessagePrinter messagePrinter) {
-        this.implementor = new Implementor() {
-
-            @Override
-            public void print(Value value) {
-                try {
-                    valuePrinter.print(value);
-                } catch (ApplicationException e) {
-                    assert false;
-                }
-            }
-
-            @Override
-            public void printMessage(String message) {
-                messagePrinter.printMessage(message);
-            }
-            
-        };
+    public EvaluationRequestAction(Implementor implementor) {
+        this.implementor = implementor;
     }
 
     public void take(Environment environment, EvaluationRequest request) {

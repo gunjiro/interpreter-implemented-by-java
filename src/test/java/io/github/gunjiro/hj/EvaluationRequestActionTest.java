@@ -12,7 +12,19 @@ public class EvaluationRequestActionTest {
     @Test
     public void takeNotDoAnythingWhenCodeIsEmptyString() {
         final String code = "";
-        final EvaluationRequestAction action = new EvaluationRequestAction(null, null);
+        final EvaluationRequestAction action = new EvaluationRequestAction(new EvaluationRequestAction.Implementor() {
+
+            @Override
+            public void print(Value value) {
+                throw new UnsupportedOperationException("Unimplemented method 'print'");
+            }
+
+            @Override
+            public void printMessage(String message) {
+                throw new UnsupportedOperationException("Unimplemented method 'printMessage'");
+            }
+            
+        });
 
         action.take(null, new EvaluationRequest(code));
     }
@@ -27,15 +39,30 @@ public class EvaluationRequestActionTest {
         environment.addFunctions(reader);
 
         final StringBuilder builder = new StringBuilder();
-        final EvaluationRequestAction action = new EvaluationRequestAction(new ValuePrinter(new ValuePrinter.Implementor() {
+        final EvaluationRequestAction action = new EvaluationRequestAction(new EvaluationRequestAction.Implementor() {
+
             @Override
-            public void print(String s) {
-                builder.append(s);
+            public void print(Value value) {
+                final ValuePrinter printer = new ValuePrinter(new ValuePrinter.Implementor() {
+
+                    @Override
+                    public void print(String output) {
+                        builder.append(output);
+                    }
+                    
+                });
+
+                try {
+                    printer.print(value);
+                } catch (ApplicationException e) {
+                    assert false;
+                }
             }
-        }), new MessagePrinter() {
+
             @Override
             public void printMessage(String message) {
             }
+
         });
 
         action.take(environment, new EvaluationRequest(code));
@@ -50,15 +77,17 @@ public class EvaluationRequestActionTest {
         final Environment environment = new DefaultEnvironment();
 
         final StringBuilder builder = new StringBuilder();
-        final EvaluationRequestAction action = new EvaluationRequestAction(new ValuePrinter(new ValuePrinter.Implementor() {
+        final EvaluationRequestAction action = new EvaluationRequestAction(new EvaluationRequestAction.Implementor() {
+
             @Override
-            public void print(String s) {
+            public void print(Value value) {
             }
-        }), new MessagePrinter() {
+
             @Override
             public void printMessage(String message) {
                 builder.append(message);
             }
+            
         });
 
         action.take(environment, new EvaluationRequest(code));
@@ -73,15 +102,17 @@ public class EvaluationRequestActionTest {
         final Environment environment = new DefaultEnvironment();
 
         final StringBuilder builder = new StringBuilder();
-        final EvaluationRequestAction action = new EvaluationRequestAction(new ValuePrinter(new ValuePrinter.Implementor() {
+        final EvaluationRequestAction action = new EvaluationRequestAction(new EvaluationRequestAction.Implementor() {
+
             @Override
-            public void print(String s) {
+            public void print(Value value) {
             }
-        }), new MessagePrinter() {
+
             @Override
             public void printMessage(String message) {
                 builder.append(message);
             }
+            
         });
 
         action.take(environment, new EvaluationRequest(code));
