@@ -10,9 +10,8 @@ import io.github.gunjiro.hj.command.CommandAnalyzer;
 import io.github.gunjiro.hj.command.operator.AppCommandOperator;
 
 public class AppRequestOperator {
-    private final RequestActionFactory factory;
     private final ResourceProvider provider;
-    private final StringPrinter strinngPrinter;
+    private final StringPrinter stringPrinter;
     private final MessagePrinter messagePrinter;
     private final List<Observer> observers = new LinkedList<>();
     public static interface Observer {
@@ -20,9 +19,8 @@ public class AppRequestOperator {
     }
 
     private AppRequestOperator(RequestActionFactory factory, ResourceProvider provider, StringPrinter strinngPrinter, MessagePrinter messagePrinter) {
-        this.factory = factory;
         this.provider = provider;
-        this.strinngPrinter = strinngPrinter;
+        this.stringPrinter = strinngPrinter;
         this.messagePrinter = messagePrinter;
     }
 
@@ -93,7 +91,34 @@ public class AppRequestOperator {
 
             @Override
             public Void visit(EvaluationRequest request) {
-                factory.createEvaluationRequestAction(strinngPrinter, messagePrinter).take(environment, request);
+                final EvaluationRequestAction action = new EvaluationRequestAction(new EvaluationRequestAction.Implementor() {
+
+                    @Override
+                    public void print(Value value) {
+                        final ValuePrinter printer = new ValuePrinter(new ValuePrinter.Implementor() {
+
+                            @Override
+                            public void print(String output) {
+                                stringPrinter.print(output);
+                            }
+
+                        });
+
+                        try {
+                            printer.print(value);
+                        } catch (ApplicationException e) {
+                            printMessage("");
+                            printMessage(e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void printMessage(String message) {
+                        messagePrinter.printMessage(message);
+                    }
+
+                });
+                action.take(environment, request);
                 return null;
             }
         });
