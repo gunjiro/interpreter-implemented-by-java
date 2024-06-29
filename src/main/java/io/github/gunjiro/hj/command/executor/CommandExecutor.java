@@ -1,4 +1,4 @@
-package io.github.gunjiro.hj.command.operator;
+package io.github.gunjiro.hj.command.executor;
 
 import java.util.LinkedList;
 import java.util.List;

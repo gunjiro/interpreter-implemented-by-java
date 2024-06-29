@@ -1,4 +1,4 @@
-package io.github.gunjiro.hj.command.operator;
+package io.github.gunjiro.hj.command.executor;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

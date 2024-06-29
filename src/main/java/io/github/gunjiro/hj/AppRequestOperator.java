@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.github.gunjiro.hj.command.CommandAnalyzer;
-import io.github.gunjiro.hj.command.operator.CommandExecutor;
+import io.github.gunjiro.hj.command.executor.CommandExecutor;
 
 public class AppRequestOperator {
     private final ResourceProvider provider;

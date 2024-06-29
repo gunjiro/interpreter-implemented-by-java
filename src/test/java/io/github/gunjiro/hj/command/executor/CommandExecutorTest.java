@@ -1,11 +1,10 @@
-package io.github.gunjiro.hj.command.operator;
+package io.github.gunjiro.hj.command.executor;
 
 import org.junit.Test;
 
 import io.github.gunjiro.hj.UnknownCommandAction;
 import io.github.gunjiro.hj.command.LoadCommand;
 import io.github.gunjiro.hj.command.UnknownCommand;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
