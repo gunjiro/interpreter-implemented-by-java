@@ -32,7 +32,11 @@ public class CommandExecutor {
     }
 
     public void execute(Command command) {
-        final CommandOperator operator = new CommandOperator(new CommandOperator.Implementor() {
+        createCommandOperator().operate(command);
+    }
+
+    private CommandOperator createCommandOperator() {
+        return new CommandOperator(new CommandOperator.Implementor() {
 
             @Override
             public void execute(EmptyCommand command) {
@@ -40,34 +44,20 @@ public class CommandExecutor {
 
             @Override
             public void execute(QuitCommand command) {
-                operate(command);
+                createQuitCommandAction().take(command);
             }
 
             @Override
             public void execute(LoadCommand command) {
-                operate(command);
+                createLoadCommandAction().take(command);
             }
 
             @Override
             public void execute(UnknownCommand command) {
-                operate(command);
+                createUnknownCommandAction().take(command);
             }
             
         });
-
-        operator.operate(command);
-    }
-
-    private void operate(QuitCommand command) {
-        createQuitCommandAction().take(command);
-    }
-
-    private void operate(LoadCommand command) {
-        createLoadCommandAction().take(command);
-    }
-
-    private void operate(UnknownCommand command) {
-        createUnknownCommandAction().take(command);
     }
 
     private QuitCommandAction createQuitCommandAction() {

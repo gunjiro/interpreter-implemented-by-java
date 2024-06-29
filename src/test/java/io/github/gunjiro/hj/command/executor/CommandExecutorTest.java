@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import io.github.gunjiro.hj.UnknownCommandAction;
 import io.github.gunjiro.hj.command.LoadCommand;
+import io.github.gunjiro.hj.command.QuitCommand;
 import io.github.gunjiro.hj.command.UnknownCommand;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -82,5 +83,36 @@ public class CommandExecutorTest {
         action.take(input);
 
         assertThat(outputsByOperator, is(outputsByAction));
+    }
+
+    @Test
+    public void receivesQuitEventWhenExecutesQuitCommand() {
+        // 終了コマンドを実行すると通知を受け取る
+        final StringBuilder message = new StringBuilder();
+
+        final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
+
+            @Override
+            public void showMessage(String message) {
+                throw new UnsupportedOperationException("Unimplemented method 'showMessage'");
+            }
+
+            @Override
+            public void load(String name) {
+                throw new UnsupportedOperationException("Unimplemented method 'load'");
+            }
+            
+        });
+        executor.addObserver(new CommandExecutor.Observer() {
+
+            @Override
+            public void receiveQuitEvent() {
+                message.append(".....quit.....");
+            }
+            
+        });
+        executor.execute(new QuitCommand());
+
+        assertThat(message.toString(), is(".....quit....."));
     }
 }
