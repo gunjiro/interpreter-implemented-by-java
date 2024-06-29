@@ -2,12 +2,31 @@ package io.github.gunjiro.hj;
 import java.io.StringReader;
 
 public class EvaluationRequestAction {
-    private final ValuePrinter valuePrinter;
-    private final MessagePrinter messagePrinter;
+    private final Implementor implementor;
+
+    public static interface Implementor {
+        public void print(Value value);
+        public void printMessage(String message);
+    }
 
     public EvaluationRequestAction(ValuePrinter valuePrinter, MessagePrinter messagePrinter) {
-        this.valuePrinter = valuePrinter;
-        this.messagePrinter = messagePrinter;
+        this.implementor = new Implementor() {
+
+            @Override
+            public void print(Value value) {
+                try {
+                    valuePrinter.print(value);
+                } catch (ApplicationException e) {
+                    assert false;
+                }
+            }
+
+            @Override
+            public void printMessage(String message) {
+                messagePrinter.printMessage(message);
+            }
+            
+        };
     }
 
     public void take(Environment environment, EvaluationRequest request) {
@@ -20,14 +39,14 @@ public class EvaluationRequestAction {
         }
 
         try {
-            valuePrinter.print(createThunk(environment, code).eval());
-            messagePrinter.printMessage("");
+            implementor.print(createThunk(environment, code).eval());
+            implementor.printMessage("");
         } catch (ApplicationException e) {
-            messagePrinter.printMessage("");
-            messagePrinter.printMessage(e.getMessage());
+            implementor.printMessage("");
+            implementor.printMessage(e.getMessage());
         } catch (EvaluationException e) {
-            messagePrinter.printMessage("");
-            messagePrinter.printMessage(e.getMessage());
+            implementor.printMessage("");
+            implementor.printMessage(e.getMessage());
         }
     }
 
