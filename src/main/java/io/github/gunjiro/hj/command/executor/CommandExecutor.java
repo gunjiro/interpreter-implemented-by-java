@@ -44,7 +44,7 @@ public class CommandExecutor {
 
             @Override
             public void execute(QuitCommand command) {
-                notifyObserversOfQuitEvet();
+                notifyObserversOfQuitEvent();
             }
 
             @Override
@@ -60,7 +60,7 @@ public class CommandExecutor {
         });
     }
 
-    private void notifyObserversOfQuitEvet() {
+    private void notifyObserversOfQuitEvent() {
         for (Observer observer : observers) {
             observer.receiveQuitEvent();
         }
