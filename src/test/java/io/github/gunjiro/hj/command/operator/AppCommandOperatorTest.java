@@ -44,7 +44,7 @@ public class AppCommandOperatorTest {
             
         });
 
-        operator.operate(input);
+        operator.execute(input);
         action.take(input);
 
         assertThat(outputByOperator.toString(), is(outputByAction.toString()));
@@ -79,7 +79,7 @@ public class AppCommandOperatorTest {
             }
         });
 
-        operator.operate(input);
+        operator.execute(input);
         action.take(input);
 
         assertThat(outputsByOperator, is(outputsByAction));

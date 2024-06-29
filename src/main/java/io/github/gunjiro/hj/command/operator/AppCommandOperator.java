@@ -31,7 +31,7 @@ public class AppCommandOperator {
         observers.add(observer);
     }
 
-    public void operate(Command command) {
+    public void execute(Command command) {
         final CommandOperator executor = new CommandOperator(new CommandOperator.Implementor() {
 
             @Override

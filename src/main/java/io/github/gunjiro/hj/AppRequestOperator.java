@@ -84,7 +84,7 @@ public class AppRequestOperator {
                 }
 
                 final CommandAnalyzer analyzer = new CommandAnalyzer();
-                operator.operate(analyzer.analyze(request.getInput()));
+                operator.execute(analyzer.analyze(request.getInput()));
 
                 return null;
             }
