@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.github.gunjiro.hj.command.CommandAnalyzer;
-import io.github.gunjiro.hj.command.operator.AppCommandOperator;
+import io.github.gunjiro.hj.command.operator.CommandExecutor;
 
 public class AppRequestOperator {
     private final ResourceProvider provider;
@@ -50,7 +50,7 @@ public class AppRequestOperator {
 
             @Override
             public Void visit(CommandRequest request) {
-                final AppCommandOperator operator = new AppCommandOperator(new AppCommandOperator.Implementor() {
+                final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
                     @Override
                     public void showMessage(String message) {
                         messagePrinter.printMessage(message);
@@ -73,7 +73,7 @@ public class AppRequestOperator {
                 });
 
                 for (Observer observer : observers) {
-                    operator.addObserver(new AppCommandOperator.Observer() {
+                    executor.addObserver(new CommandExecutor.Observer() {
 
                         @Override
                         public void notifyQuit() {
@@ -84,7 +84,7 @@ public class AppRequestOperator {
                 }
 
                 final CommandAnalyzer analyzer = new CommandAnalyzer();
-                operator.execute(analyzer.analyze(request.getInput()));
+                executor.execute(analyzer.analyze(request.getInput()));
 
                 return null;
             }

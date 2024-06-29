@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.*;
 import java.util.LinkedList;
 import java.util.List;
 
-public class AppCommandOperatorTest {
+public class CommandExecutorTest {
     @Test
     public void outputsMessageWhenInputIsUnknownCommand() {
         // 入力が不明なコマンドの場合、メッセージを出力する。
@@ -21,7 +21,7 @@ public class AppCommandOperatorTest {
         final StringBuilder outputByOperator = new StringBuilder();
         final StringBuilder outputByAction = new StringBuilder();
 
-        final AppCommandOperator operator = new AppCommandOperator(new AppCommandOperator.Implementor() {
+        final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
 
             @Override
             public void showMessage(String message) {
@@ -44,7 +44,7 @@ public class AppCommandOperatorTest {
             
         });
 
-        operator.execute(input);
+        executor.execute(input);
         action.take(input);
 
         assertThat(outputByOperator.toString(), is(outputByAction.toString()));
@@ -57,7 +57,7 @@ public class AppCommandOperatorTest {
         final LoadCommand input = new LoadCommand(List.of("resource1", "resource2"));
         final LinkedList<String> outputsByOperator = new LinkedList<String>();
         final LinkedList<String> outputsByAction = new LinkedList<String>();
-        final AppCommandOperator operator = new AppCommandOperator(new AppCommandOperator.Implementor() {
+        final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
 
             @Override
             public void showMessage(String message) {
@@ -79,7 +79,7 @@ public class AppCommandOperatorTest {
             }
         });
 
-        operator.execute(input);
+        executor.execute(input);
         action.take(input);
 
         assertThat(outputsByOperator, is(outputsByAction));

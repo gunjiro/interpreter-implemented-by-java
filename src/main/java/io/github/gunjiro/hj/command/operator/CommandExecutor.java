@@ -10,7 +10,7 @@ import io.github.gunjiro.hj.command.LoadCommand;
 import io.github.gunjiro.hj.command.QuitCommand;
 import io.github.gunjiro.hj.command.UnknownCommand;
 
-public class AppCommandOperator {
+public class CommandExecutor {
     private final Implementor implementor;
     private final List<Observer> observers = new LinkedList<>();
 
@@ -23,7 +23,7 @@ public class AppCommandOperator {
         public void notifyQuit();
     }
 
-    public AppCommandOperator(Implementor implementor) {
+    public CommandExecutor(Implementor implementor) {
         this.implementor = implementor;
     }
 
@@ -32,7 +32,7 @@ public class AppCommandOperator {
     }
 
     public void execute(Command command) {
-        final CommandOperator executor = new CommandOperator(new CommandOperator.Implementor() {
+        final CommandOperator operator = new CommandOperator(new CommandOperator.Implementor() {
 
             @Override
             public void execute(EmptyCommand command) {
@@ -55,7 +55,7 @@ public class AppCommandOperator {
             
         });
 
-        executor.operate(command);
+        operator.operate(command);
     }
 
     private void operate(QuitCommand command) {
