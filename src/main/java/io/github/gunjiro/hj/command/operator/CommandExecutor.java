@@ -20,7 +20,7 @@ public class CommandExecutor {
         public void execute(UnknownCommand command);
     }
 
-    public void execute(Command command) {
+    public void operate(Command command) {
         command.accept(new Command.Visitor<Void>() {
 
             @Override

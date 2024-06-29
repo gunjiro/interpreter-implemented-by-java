@@ -55,7 +55,7 @@ public class AppCommandOperator {
             
         });
 
-        executor.execute(command);
+        executor.operate(command);
     }
 
     private void operate(QuitCommand command) {
