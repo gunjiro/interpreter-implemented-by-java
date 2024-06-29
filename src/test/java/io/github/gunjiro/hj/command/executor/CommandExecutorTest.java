@@ -88,7 +88,7 @@ public class CommandExecutorTest {
     @Test
     public void receivesQuitEventWhenExecutesQuitCommand() {
         // 終了コマンドを実行すると通知を受け取る
-        final StringBuilder message = new StringBuilder();
+        final List<CommandExecutor.Notification> notifications = new LinkedList<>();
 
         final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
 
@@ -106,13 +106,13 @@ public class CommandExecutorTest {
         executor.addObserver(new CommandExecutor.Observer() {
 
             @Override
-            public void receiveQuitEvent() {
-                message.append(".....quit.....");
+            public void receive(CommandExecutor.Notification notification) {
+                notifications.add(notification);
             }
             
         });
         executor.execute(new QuitCommand());
 
-        assertThat(message.toString(), is(".....quit....."));
+        assertThat(notifications, contains(instanceOf(CommandExecutor.Quit.class)));
     }
 }

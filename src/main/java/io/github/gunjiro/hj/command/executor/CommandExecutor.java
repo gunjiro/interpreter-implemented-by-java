@@ -20,8 +20,13 @@ public class CommandExecutor {
     }
 
     public static interface Observer {
-        public void receiveQuitEvent();
+        public void receive(Notification notification);
     }
+
+    public static interface Notification { }
+    public static class CommandIsEmpty implements Notification { }
+    public static class CommandIsUnknown implements Notification { }
+    public static class Quit implements Notification { }
 
     public CommandExecutor(Implementor implementor) {
         this.implementor = implementor;
@@ -44,7 +49,7 @@ public class CommandExecutor {
 
             @Override
             public void execute(QuitCommand command) {
-                notifyObserversOfQuitEvent();
+                notifyObservers(new Quit());
             }
 
             @Override
@@ -60,9 +65,9 @@ public class CommandExecutor {
         });
     }
 
-    private void notifyObserversOfQuitEvent() {
+    private void notifyObservers(Notification notification) {
         for (Observer observer : observers) {
-            observer.receiveQuitEvent();
+            observer.receive(notification);
         }
     }
 

@@ -76,8 +76,10 @@ public class AppRequestOperator {
                     executor.addObserver(new CommandExecutor.Observer() {
 
                         @Override
-                        public void receiveQuitEvent() {
-                            observer.notifyQuit();
+                        public void receive(CommandExecutor.Notification notification) {
+                            if (notification instanceof CommandExecutor.Quit) {
+                                observer.notifyQuit();
+                            }
                         }
 
                     });
