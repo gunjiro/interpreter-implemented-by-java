@@ -2,6 +2,7 @@ package io.github.gunjiro.hj.command.executor;
 
 import org.junit.Test;
 
+import io.github.gunjiro.hj.command.EmptyCommand;
 import io.github.gunjiro.hj.command.LoadCommand;
 import io.github.gunjiro.hj.command.QuitCommand;
 import io.github.gunjiro.hj.command.UnknownCommand;
@@ -12,6 +13,37 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CommandExecutorTest {
+    @Test
+    public void revceivesCommandIsEmpty() {
+        // 入力が空のコマンドの場合、通知を受け取る。
+        final List<CommandExecutor.Notification> notifications = new LinkedList<>();
+
+        final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
+
+            @Override
+            public void showMessage(String message) {
+                throw new UnsupportedOperationException("Unimplemented method 'showMessage'");
+            }
+
+            @Override
+            public void load(String name) {
+                throw new UnsupportedOperationException("Unimplemented method 'load'");
+            }
+            
+        });
+        executor.addObserver(new CommandExecutor.Observer() {
+
+            @Override
+            public void receive(CommandExecutor.Notification notification) {
+                notifications.add(notification);
+            }
+            
+        });
+        executor.execute(new EmptyCommand());
+
+        assertThat(notifications, contains(instanceOf(CommandExecutor.CommandIsEmpty.class)));
+    }
+
     @Test
     public void revceivesCommandIsUnknown() {
         // 入力が不明なコマンドの場合、通知を受け取る。

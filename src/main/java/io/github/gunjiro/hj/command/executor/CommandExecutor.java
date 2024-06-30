@@ -84,6 +84,7 @@ public class CommandExecutor {
 
             @Override
             public void execute(EmptyCommand command) {
+                notifyObservers(new CommandIsEmpty());
             }
 
             @Override
