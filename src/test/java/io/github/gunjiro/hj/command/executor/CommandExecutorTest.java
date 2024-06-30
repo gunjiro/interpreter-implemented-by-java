@@ -24,6 +24,11 @@ public class CommandExecutorTest {
             public void load(String name) {
                 throw new UnsupportedOperationException("Unimplemented method 'load'");
             }
+
+            @Override
+            public void quit() {
+                throw new UnsupportedOperationException("Unimplemented method 'quit'");
+            }
             
         });
         executor.addObserver(new CommandExecutor.Observer() {
@@ -50,6 +55,11 @@ public class CommandExecutorTest {
             @Override
             public void load(String name) {
                 throw new UnsupportedOperationException("Unimplemented method 'load'");
+            }
+
+            @Override
+            public void quit() {
+                throw new UnsupportedOperationException("Unimplemented method 'quit'");
             }
             
         });
@@ -80,6 +90,11 @@ public class CommandExecutorTest {
                 outputsByOperator.add("loaded: " + name);
             }
 
+            @Override
+            public void quit() {
+                throw new UnsupportedOperationException("Unimplemented method 'quit'");
+            }
+
         });
             
         final LoadCommandAction action = new LoadCommandAction(new LoadCommandAction.Implementor() {
@@ -97,9 +112,9 @@ public class CommandExecutorTest {
     }
 
     @Test
-    public void receivesQuitEventWhenExecutesQuitCommand() {
-        // 終了コマンドを実行すると通知を受け取る
-        final List<CommandExecutor.Notification> notifications = new LinkedList<>();
+    public void executesQuitCommand() {
+        // 終了コマンドを実行
+        final StringBuilder message = new StringBuilder();
 
         final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
 
@@ -107,18 +122,15 @@ public class CommandExecutorTest {
             public void load(String name) {
                 throw new UnsupportedOperationException("Unimplemented method 'load'");
             }
-            
-        });
-        executor.addObserver(new CommandExecutor.Observer() {
 
             @Override
-            public void receive(CommandExecutor.Notification notification) {
-                notifications.add(notification);
+            public void quit() {
+                message.append(".....quit.....");
             }
             
         });
         executor.execute(new QuitCommand());
 
-        assertThat(notifications, contains(instanceOf(CommandExecutor.Quit.class)));
+        assertThat(message, hasToString(".....quit....."));
     }
 }

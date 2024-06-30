@@ -15,6 +15,7 @@ public class CommandExecutor {
 
     public static interface Implementor {
         public void load(String name);
+        public void quit();
     }
 
     public static interface Observer {
@@ -23,7 +24,6 @@ public class CommandExecutor {
 
     public static interface Notification { }
     public static class CommandIsEmpty implements Notification { }
-    public static class Quit implements Notification { }
     public static class CommandIsUnknown implements Notification {
         private final String command;
 
@@ -88,7 +88,8 @@ public class CommandExecutor {
 
             @Override
             public void execute(QuitCommand command) {
-                notifyObservers(new Quit());
+                assert true;
+                implementor.quit();
             }
 
             @Override

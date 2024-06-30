@@ -66,22 +66,25 @@ public class AppRequestOperator {
                         }
                     }
 
+                    @Override
+                    public void quit() {
+                        for (Observer observer : observers) {
+                            observer.notifyQuit();
+                        }
+                    }
+
                 });
 
-                for (Observer observer : observers) {
-                    executor.addObserver(new CommandExecutor.Observer() {
+                executor.addObserver(new CommandExecutor.Observer() {
 
-                        @Override
-                        public void receive(CommandExecutor.Notification notification) {
-                            if (notification instanceof CommandExecutor.Quit) {
-                                observer.notifyQuit();
-                            } else if (notification instanceof CommandExecutor.CommandIsUnknown) {
-                                messagePrinter.printMessage(String.format("unknown command '%s'", ((CommandExecutor.CommandIsUnknown)notification).getCommand()));
-                            }
+                    @Override
+                    public void receive(CommandExecutor.Notification notification) {
+                        if (notification instanceof CommandExecutor.CommandIsUnknown) {
+                            messagePrinter.printMessage(String.format("unknown command '%s'", ((CommandExecutor.CommandIsUnknown)notification).getCommand()));
                         }
+                    }
 
-                    });
-                }
+                });
 
                 final CommandAnalyzer analyzer = new CommandAnalyzer();
                 executor.execute(analyzer.analyze(request.getInput()));
