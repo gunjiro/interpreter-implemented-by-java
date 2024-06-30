@@ -2,7 +2,6 @@ package io.github.gunjiro.hj.command.executor;
 
 import org.junit.Test;
 
-import io.github.gunjiro.hj.UnknownCommandAction;
 import io.github.gunjiro.hj.command.LoadCommand;
 import io.github.gunjiro.hj.command.QuitCommand;
 import io.github.gunjiro.hj.command.UnknownCommand;
@@ -14,18 +13,16 @@ import java.util.List;
 
 public class CommandExecutorTest {
     @Test
-    public void outputsMessageWhenInputIsUnknownCommand() {
-        // 入力が不明なコマンドの場合、メッセージを出力する。
-        // このテストでは「コマンド処理」の結果が「不明なコマンドを処理するアクション」の結果と同等になることを確認する。
-        final UnknownCommand input = new UnknownCommand("☆☆☆☆☆");
-        final StringBuilder outputByOperator = new StringBuilder();
-        final StringBuilder outputByAction = new StringBuilder();
+    public void revceivesCommandIsUnknown() {
+        // 入力が不明なコマンドの場合、通知を受け取る。
+        final List<CommandExecutor.Notification> notifications = new LinkedList<>();
 
+        final UnknownCommand input = new UnknownCommand("☆☆☆☆☆");
         final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
 
             @Override
             public void showMessage(String message) {
-                outputByOperator.append(message);
+                throw new UnsupportedOperationException("Unimplemented method 'showMessage'");
             }
 
             @Override
@@ -34,20 +31,17 @@ public class CommandExecutorTest {
             }
             
         });
-
-        final UnknownCommandAction action = new UnknownCommandAction(new UnknownCommandAction.Implementor() {
+        executor.addObserver(new CommandExecutor.Observer() {
 
             @Override
-            public void showMessage(String message) {
-                outputByAction.append(message);
+            public void receive(CommandExecutor.Notification notification) {
+                notifications.add(notification);
             }
             
         });
-
         executor.execute(input);
-        action.take(input);
 
-        assertThat(outputByOperator.toString(), is(outputByAction.toString()));
+        assertThat(notifications, contains(new CommandExecutor.CommandIsUnknown("☆☆☆☆☆")));
     }
 
     @Test

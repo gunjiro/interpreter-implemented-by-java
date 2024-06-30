@@ -79,6 +79,8 @@ public class AppRequestOperator {
                         public void receive(CommandExecutor.Notification notification) {
                             if (notification instanceof CommandExecutor.Quit) {
                                 observer.notifyQuit();
+                            } else if (notification instanceof CommandExecutor.CommandIsUnknown) {
+                                messagePrinter.printMessage(String.format("unknown command '%s'", ((CommandExecutor.CommandIsUnknown)notification).getCommand()));
                             }
                         }
 

@@ -3,7 +3,6 @@ package io.github.gunjiro.hj.command.executor;
 import java.util.LinkedList;
 import java.util.List;
 
-import io.github.gunjiro.hj.UnknownCommandAction;
 import io.github.gunjiro.hj.command.Command;
 import io.github.gunjiro.hj.command.EmptyCommand;
 import io.github.gunjiro.hj.command.LoadCommand;
@@ -25,8 +24,48 @@ public class CommandExecutor {
 
     public static interface Notification { }
     public static class CommandIsEmpty implements Notification { }
-    public static class CommandIsUnknown implements Notification { }
     public static class Quit implements Notification { }
+    public static class CommandIsUnknown implements Notification {
+        private final String command;
+
+        public CommandIsUnknown(String command) {
+            this.command = command;
+        }
+
+        public String getCommand() {
+            return command;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((command == null) ? 0 : command.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            CommandIsUnknown other = (CommandIsUnknown) obj;
+            if (command == null) {
+                if (other.command != null)
+                    return false;
+            } else if (!command.equals(other.command))
+                return false;
+            return true;
+        }
+
+        @Override
+        public String toString() {
+            return "CommandIsUnknown [command=" + command + "]";
+        }
+    }
 
     public CommandExecutor(Implementor implementor) {
         this.implementor = implementor;
@@ -59,7 +98,7 @@ public class CommandExecutor {
 
             @Override
             public void execute(UnknownCommand command) {
-                createUnknownCommandAction().take(command);
+                notifyObservers(new CommandIsUnknown(command.getCommandName()));
             }
             
         });
@@ -77,17 +116,6 @@ public class CommandExecutor {
             public void load(String name) {
                 implementor.load(name);
             }
-        });
-    }
-
-    private UnknownCommandAction createUnknownCommandAction() {
-        return new UnknownCommandAction(new UnknownCommandAction.Implementor() {
-
-            @Override
-            public void showMessage(String message) {
-                implementor.showMessage(message);
-            }
-
         });
     }
 }
