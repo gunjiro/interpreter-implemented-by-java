@@ -25,15 +25,7 @@ public class AppRequestOperator {
     }
 
     public static AppRequestOperator create(ResourceProvider provider, StringPrinter strinngPrinter, MessagePrinter messagePrinter) {
-        final AppRequestOperator operator = new AppRequestOperator(provider, strinngPrinter, messagePrinter);
-        operator.addObserver(new Observer() {
-
-            @Override
-            public void notifyQuit() {
-            }
-            
-        });
-        return operator;
+        return new AppRequestOperator(provider, strinngPrinter, messagePrinter);
     }
 
     public void addObserver(Observer observer) {
