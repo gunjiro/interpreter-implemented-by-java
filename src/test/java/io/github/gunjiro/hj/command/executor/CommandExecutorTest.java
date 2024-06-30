@@ -21,11 +21,6 @@ public class CommandExecutorTest {
         final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
 
             @Override
-            public void showMessage(String message) {
-                throw new UnsupportedOperationException("Unimplemented method 'showMessage'");
-            }
-
-            @Override
             public void load(String name) {
                 throw new UnsupportedOperationException("Unimplemented method 'load'");
             }
@@ -51,11 +46,6 @@ public class CommandExecutorTest {
 
         final UnknownCommand input = new UnknownCommand("☆☆☆☆☆");
         final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
-
-            @Override
-            public void showMessage(String message) {
-                throw new UnsupportedOperationException("Unimplemented method 'showMessage'");
-            }
 
             @Override
             public void load(String name) {
@@ -86,11 +76,6 @@ public class CommandExecutorTest {
         final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
 
             @Override
-            public void showMessage(String message) {
-                throw new UnsupportedOperationException("Unimplemented method 'showMessage'");
-            }
-
-            @Override
             public void load(String name) {
                 outputsByOperator.add("loaded: " + name);
             }
@@ -117,11 +102,6 @@ public class CommandExecutorTest {
         final List<CommandExecutor.Notification> notifications = new LinkedList<>();
 
         final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
-
-            @Override
-            public void showMessage(String message) {
-                throw new UnsupportedOperationException("Unimplemented method 'showMessage'");
-            }
 
             @Override
             public void load(String name) {

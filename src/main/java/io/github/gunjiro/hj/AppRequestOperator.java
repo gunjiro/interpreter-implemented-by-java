@@ -51,20 +51,16 @@ public class AppRequestOperator {
             @Override
             public Void visit(CommandRequest request) {
                 final CommandExecutor executor = new CommandExecutor(new CommandExecutor.Implementor() {
-                    @Override
-                    public void showMessage(String message) {
-                        messagePrinter.printMessage(message);
-                    }
 
                     @Override
                     public void load(String name) {
                         try (Reader reader = provider.open(name)) {
                             environment.addFunctions(reader);
-                            showMessage("loaded: " + name);
+                            messagePrinter.printMessage("loaded: " + name);
                         } catch (ResourceProvider.FailedException e) {
-                            showMessage(e.getMessage());
+                            messagePrinter.printMessage(e.getMessage());
                         } catch (ApplicationException e) {
-                            showMessage(e.getMessage());
+                            messagePrinter.printMessage(e.getMessage());
                         } catch (IOException e) {
                             throw new IOError(e);
                         }

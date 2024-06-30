@@ -14,7 +14,6 @@ public class CommandExecutor {
     private final List<Observer> observers = new LinkedList<>();
 
     public static interface Implementor {
-        public void showMessage(String message);
         public void load(String name);
     }
 
