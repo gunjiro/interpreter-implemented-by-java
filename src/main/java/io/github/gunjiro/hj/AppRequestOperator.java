@@ -14,19 +14,23 @@ public class AppRequestOperator {
     private final ResourceProvider provider;
     private final StringPrinter stringPrinter;
     private final MessagePrinter messagePrinter;
+
+    private final Implementor implementor;
     private final List<Observer> observers = new LinkedList<>();
+
+    public static interface Implementor {
+        public void quit();
+    }
+
     public static interface Observer {
         public void notifyQuit();
     }
 
-    private AppRequestOperator(ResourceProvider provider, StringPrinter strinngPrinter, MessagePrinter messagePrinter) {
+    public AppRequestOperator(ResourceProvider provider, StringPrinter strinngPrinter, MessagePrinter messagePrinter, Implementor implementor) {
         this.provider = provider;
         this.stringPrinter = strinngPrinter;
         this.messagePrinter = messagePrinter;
-    }
-
-    public static AppRequestOperator create(ResourceProvider provider, StringPrinter strinngPrinter, MessagePrinter messagePrinter) {
-        return new AppRequestOperator(provider, strinngPrinter, messagePrinter);
+        this.implementor = implementor;
     }
 
     public void addObserver(Observer observer) {
@@ -80,9 +84,7 @@ public class AppRequestOperator {
 
                     @Override
                     public void quit() {
-                        for (Observer observer : observers) {
-                            observer.notifyQuit();
-                        }
+                        implementor.quit();
                     }
 
                 });

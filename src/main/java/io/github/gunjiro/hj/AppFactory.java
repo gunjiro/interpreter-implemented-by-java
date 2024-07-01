@@ -1,10 +1,6 @@
 package io.github.gunjiro.hj;
 public class AppFactory {
     public App create(InputReceiver receiver, ResourceProvider provider, StringPrinter stringPrinter, MessagePrinter messagePrinter) {
-        return new App(createIOLoop(receiver, provider, stringPrinter, messagePrinter), messagePrinter);
-    }
-
-    private IOLoop createIOLoop(InputReceiver receiver, ResourceProvider provider, StringPrinter stringPrinter, MessagePrinter messagePrinter) {
-        return IOLoop.create(receiver, AppRequestOperator.create(provider, stringPrinter, messagePrinter));
+        return new App(IOLoop.create(receiver, provider, stringPrinter, messagePrinter), messagePrinter);
     }
 }

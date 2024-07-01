@@ -11,7 +11,14 @@ public class AppRequestOperatorTest {
         final Request request = new CommandRequest(":q");
         final StringBuilder result = new StringBuilder();
 
-        final AppRequestOperator operator = AppRequestOperator.create(null, null, null);
+        final AppRequestOperator operator = new AppRequestOperator(null, null, null, new AppRequestOperator.Implementor() {
+
+            @Override
+            public void quit() {
+                result.append(".....quit.....");
+            }
+
+        });
         operator.addObserver(new AppRequestOperator.Observer() {
 
             @Override

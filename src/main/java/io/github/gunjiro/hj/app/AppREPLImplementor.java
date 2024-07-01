@@ -47,7 +47,14 @@ class AppREPLImplementor implements REPL.Implementor {
     }
 
     private AppRequestOperator createOperator() {
-        AppRequestOperator operator = AppRequestOperator.create(new FileResourceProvider(), new SystemOutStringPrinter(), new SystemOutMessagePrinter());
+        AppRequestOperator operator = new AppRequestOperator(new FileResourceProvider(), new SystemOutStringPrinter(), new SystemOutMessagePrinter(), new AppRequestOperator.Implementor() {
+
+            @Override
+            public void quit() {
+                isExited = true;
+            }
+
+        });
         operator.addObserver(new AppRequestOperator.Observer() {
 
             @Override
