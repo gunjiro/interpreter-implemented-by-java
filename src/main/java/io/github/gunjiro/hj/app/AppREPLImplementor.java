@@ -1,10 +1,9 @@
 package io.github.gunjiro.hj.app;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.Reader;
 
 import io.github.gunjiro.hj.AppRequestOperator;
+import io.github.gunjiro.hj.ApplicationException;
 import io.github.gunjiro.hj.DefaultEnvironment;
 import io.github.gunjiro.hj.Environment;
 import io.github.gunjiro.hj.InputReceiver;
@@ -16,6 +15,7 @@ import io.github.gunjiro.hj.StringPrinter;
 import io.github.gunjiro.hj.SystemInInputReceiver;
 import io.github.gunjiro.hj.SystemOutMessagePrinter;
 import io.github.gunjiro.hj.SystemOutStringPrinter;
+import io.github.gunjiro.hj.processor.FileLoader;
 
 class AppREPLImplementor implements REPL.Implementor {
     private final Environment environment;
@@ -43,7 +43,7 @@ class AppREPLImplementor implements REPL.Implementor {
 
     private void operate(String input) {
         final Request request = createRequest(input);
-        createOperator().operate(environment, request);
+        createOperator().operate(request);
     }
 
     private static Request createRequest(String input) {
@@ -71,14 +71,28 @@ class AppREPLImplementor implements REPL.Implementor {
                 messagePrinter.printMessage(message);
             }
 
-        }, new AppRequestOperator.Factory() {
-
             @Override
-            public Reader createReader(String filename) throws FileNotFoundException {
-                return new FileReader(filename);
+            public void load(String name) {
+                FileLoader.create(new FileLoader.Implementor() {
+
+                    @Override
+                    public void storeFunctions(Reader reader) {
+                        try {
+                            environment.addFunctions(reader);
+                        } catch (ApplicationException e) {
+                            sendMessage(e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void sendMessage(String message) {
+                        messagePrinter.printMessage(message);
+                    }
+                    
+                }).load(name);
             }
-            
-        });
+
+        }, environment);
     }
 
     @Override

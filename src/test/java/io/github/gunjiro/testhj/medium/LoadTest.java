@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import io.github.gunjiro.hj.App;
 import io.github.gunjiro.hj.AppFactory;
+import io.github.gunjiro.hj.DefaultEnvironment;
 import io.github.gunjiro.hj.InputReceiver;
 import io.github.gunjiro.hj.MessagePrinter;
 import io.github.gunjiro.hj.ResourceProvider;
@@ -44,7 +45,7 @@ public class LoadTest {
             @Override
             public void printMessage(String message) {
             }
-        });
+        }, new DefaultEnvironment());
 
         app.run();
 

@@ -1,31 +1,25 @@
 package io.github.gunjiro.hj;
 
-import java.io.FileNotFoundException;
-import java.io.Reader;
 import io.github.gunjiro.hj.command.CommandAnalyzer;
 import io.github.gunjiro.hj.command.executor.CommandExecutor;
-import io.github.gunjiro.hj.processor.FileLoader;
 
 public class AppRequestOperator {
     private final Implementor implementor;
-    private final Factory factory;
+    private final Environment environment;
 
     public static interface Implementor {
+        public void load(String name);
         public void quit();
         public void print(String output);
         public void sendMessage(String message);
     }
 
-    public static interface Factory {
-        public Reader createReader(String filename) throws FileNotFoundException;
-    }
-
-    public AppRequestOperator(Implementor implementor, Factory factory) {
+    public AppRequestOperator(Implementor implementor, Environment environment) {
         this.implementor = implementor;
-        this.factory = factory;
+        this.environment = environment;
     }
 
-    public void operate(Environment environment, Request request) {
+    public void operate(Request request) {
         request.accept(new Request.Visitor<Void>() {
 
             @Override
@@ -39,31 +33,7 @@ public class AppRequestOperator {
 
                     @Override
                     public void load(String name) {
-                        final FileLoader loader = new FileLoader(new FileLoader.Implementor() {
-
-                            @Override
-                            public void storeFunctions(Reader reader) {
-                                try {
-                                    environment.addFunctions(reader);
-                                } catch (ApplicationException e) {
-                                    implementor.sendMessage(e.getMessage());
-                                }
-                            }
-
-                            @Override
-                            public void sendMessage(String message) {
-                                implementor.sendMessage(message);
-                            }
-                            
-                        }, new FileLoader.Factory() {
-
-                            @Override
-                            public Reader createReader(String filename) throws FileNotFoundException {
-                                return factory.createReader(filename);
-                            }
-                            
-                        });
-                        loader.load(name);
+                        implementor.load(name);
                     }
 
                     @Override

@@ -26,7 +26,7 @@ public class AppTest {
             public void printMessage(String message) {
                 builder.append(message);
             }
-        });
+        }, null);
 
         app.run();
 
@@ -59,7 +59,7 @@ public class AppTest {
             @Override
             public void printMessage(String message) {
             }
-        });
+        }, new DefaultEnvironment());
 
         app.run();
 
@@ -89,7 +89,7 @@ public class AppTest {
             @Override
             public void printMessage(String message) {
             }
-        });
+        }, null);
 
         app.run();
     }
@@ -117,7 +117,7 @@ public class AppTest {
             @Override
             public void printMessage(String message) {
             }
-        });
+        }, null);
 
         app.run();
     }
@@ -147,7 +147,7 @@ public class AppTest {
             public void printMessage(String message) {
                 messages.add(message);
             }
-        });
+        }, null);
 
         app.run();
 

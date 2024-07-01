@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.Reader;
 
 import io.github.gunjiro.hj.ResourceProvider.FailedException;
+import io.github.gunjiro.hj.processor.FileLoader;
 
 public class IOLoop {
     private final RequestFactory factory;
@@ -37,7 +38,7 @@ public class IOLoop {
      * @param messagePrinter
      * @return
      */
-    public static IOLoop create(InputReceiver receiver, ResourceProvider provider, StringPrinter stringPrinter, MessagePrinter messagePrinter) {
+    public static IOLoop create(InputReceiver receiver, ResourceProvider provider, StringPrinter stringPrinter, MessagePrinter messagePrinter, Environment environment) {
         final State state = new State();
         final AppRequestOperator operator = new AppRequestOperator(new AppRequestOperator.Implementor() {
 
@@ -55,28 +56,48 @@ public class IOLoop {
             public void sendMessage(String message) {
                 messagePrinter.printMessage(message);
             }
-            
-        }, new AppRequestOperator.Factory() {
 
             @Override
-            public Reader createReader(String filename) throws FileNotFoundException {
-                try {
-                    return provider.open(filename);
-                } catch (FailedException e) {
-                    throw new FileNotFoundException(e.getMessage());
-                }
+            public void load(String name) {
+                (new FileLoader(new FileLoader.Implementor() {
+
+                    @Override
+                    public void storeFunctions(Reader reader) {
+                        try {
+                            environment.addFunctions(reader);
+                        } catch (ApplicationException e) {
+                            sendMessage(e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void sendMessage(String message) {
+                        messagePrinter.printMessage(message);
+                    }
+                    
+                }, new FileLoader.Factory() {
+
+                    @Override
+                    public Reader createReader(String filename) throws FileNotFoundException {
+                        try {
+                            return provider.open(filename);
+                        } catch (FailedException e) {
+                            throw new FileNotFoundException(e.getMessage());
+                        }
+                    }
+                    
+                })).load(name);
             }
             
-        });
+        }, environment);
         return new IOLoop(new RequestFactory(), receiver, operator, state);
     }
 
     public void loop() {
-        final Environment environment = new DefaultEnvironment();
         while (true) {
             String input = receiver.receive();
             Request request = factory.createRequest(input);
-            operator.operate(environment, request);
+            operator.operate(request);
 
             if (state.isExited()) {
                 break;

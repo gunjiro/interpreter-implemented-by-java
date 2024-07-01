@@ -17,7 +17,7 @@ public class IOLoopTest {
             public String receive() {
                 return inputs.pop();
             }
-        }, null, null, null);
+        }, null, null, null, null);
 
         ioLoop.loop();
 
