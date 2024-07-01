@@ -1,19 +1,17 @@
 package io.github.gunjiro.hj.app;
 
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.Reader;
 
 import io.github.gunjiro.hj.AppRequestOperator;
 import io.github.gunjiro.hj.DefaultEnvironment;
 import io.github.gunjiro.hj.Environment;
-import io.github.gunjiro.hj.FileResourceProvider;
 import io.github.gunjiro.hj.InputReceiver;
 import io.github.gunjiro.hj.MessagePrinter;
 import io.github.gunjiro.hj.REPL;
 import io.github.gunjiro.hj.Request;
 import io.github.gunjiro.hj.RequestFactory;
-import io.github.gunjiro.hj.ResourceProvider;
-import io.github.gunjiro.hj.ResourceProvider.FailedException;
 import io.github.gunjiro.hj.StringPrinter;
 import io.github.gunjiro.hj.SystemInInputReceiver;
 import io.github.gunjiro.hj.SystemOutMessagePrinter;
@@ -56,7 +54,6 @@ class AppREPLImplementor implements REPL.Implementor {
     private AppRequestOperator createOperator() {
         final StringPrinter stringPrinter = new SystemOutStringPrinter();
         final MessagePrinter messagePrinter = new SystemOutMessagePrinter();
-        final ResourceProvider provider = new FileResourceProvider();
         return new AppRequestOperator(new AppRequestOperator.Implementor() {
 
             @Override
@@ -78,11 +75,7 @@ class AppREPLImplementor implements REPL.Implementor {
 
             @Override
             public Reader createReader(String filename) throws FileNotFoundException {
-                try {
-                    return provider.open(filename);
-                } catch (FailedException e) {
-                    throw new FileNotFoundException(e.getMessage());
-                }
+                return new FileReader(filename);
             }
             
         });
