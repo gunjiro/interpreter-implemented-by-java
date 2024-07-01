@@ -1,13 +1,14 @@
 package io.github.gunjiro.hj;
 
-import java.io.IOError;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.Reader;
 import java.util.LinkedList;
 import java.util.List;
 
+import io.github.gunjiro.hj.ResourceProvider.FailedException;
 import io.github.gunjiro.hj.command.CommandAnalyzer;
 import io.github.gunjiro.hj.command.executor.CommandExecutor;
+import io.github.gunjiro.hj.processor.FileLoader;
 
 public class AppRequestOperator {
     private final ResourceProvider provider;
@@ -46,16 +47,35 @@ public class AppRequestOperator {
 
                     @Override
                     public void load(String name) {
-                        try (Reader reader = provider.open(name)) {
-                            environment.addFunctions(reader);
-                            messagePrinter.printMessage("loaded: " + name);
-                        } catch (ResourceProvider.FailedException e) {
-                            messagePrinter.printMessage(e.getMessage());
-                        } catch (ApplicationException e) {
-                            messagePrinter.printMessage(e.getMessage());
-                        } catch (IOException e) {
-                            throw new IOError(e);
-                        }
+                        final FileLoader loader = new FileLoader(new FileLoader.Implementor() {
+
+                            @Override
+                            public void storeFunctions(Reader reader) {
+                                try {
+                                    environment.addFunctions(reader);
+                                } catch (ApplicationException e) {
+                                    messagePrinter.printMessage(e.getMessage());
+                                }
+                            }
+
+                            @Override
+                            public void sendMessage(String message) {
+                                messagePrinter.printMessage(message);
+                            }
+                            
+                        }, new FileLoader.Factory() {
+
+                            @Override
+                            public Reader createReader(String filename) throws FileNotFoundException {
+                                try {
+                                    return provider.open(filename);
+                                } catch (FailedException e) {
+                                    throw new FileNotFoundException(e.getMessage());
+                                }
+                            }
+                            
+                        });
+                        loader.load(name);
                     }
 
                     @Override
