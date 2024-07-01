@@ -47,7 +47,7 @@ class AppREPLImplementor implements REPL.Implementor {
     }
 
     private AppRequestOperator createOperator() {
-        AppRequestOperator operator = new AppRequestOperator(new FileResourceProvider(), new SystemOutStringPrinter(), new SystemOutMessagePrinter(), new AppRequestOperator.Implementor() {
+        return new AppRequestOperator(new FileResourceProvider(), new SystemOutStringPrinter(), new SystemOutMessagePrinter(), new AppRequestOperator.Implementor() {
 
             @Override
             public void quit() {
@@ -55,15 +55,6 @@ class AppREPLImplementor implements REPL.Implementor {
             }
 
         });
-        operator.addObserver(new AppRequestOperator.Observer() {
-
-            @Override
-            public void notifyQuit() {
-                isExited = true;
-            }
-            
-        });
-        return operator;
     }
 
     @Override

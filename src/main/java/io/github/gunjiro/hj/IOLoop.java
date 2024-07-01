@@ -41,16 +41,7 @@ public class IOLoop {
             }
             
         });
-        final IOLoop ioLoop = new IOLoop(new RequestFactory(), receiver, operator, state);
-        operator.addObserver(new AppRequestOperator.Observer() {
-
-            @Override
-            public void notifyQuit() {
-                state.quit();
-            }
-            
-        });
-        return ioLoop;
+        return new IOLoop(new RequestFactory(), receiver, operator, state);
     }
 
     public void loop() {

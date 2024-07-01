@@ -19,14 +19,6 @@ public class AppRequestOperatorTest {
             }
 
         });
-        operator.addObserver(new AppRequestOperator.Observer() {
-
-            @Override
-            public void notifyQuit() {
-                result.append(".....quit.....");
-            }
-            
-        });
         operator.operate(new DefaultEnvironment(), request);
 
         assertThat(result.toString(), is(".....quit....."));

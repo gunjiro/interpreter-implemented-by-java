@@ -2,9 +2,6 @@ package io.github.gunjiro.hj;
 
 import java.io.FileNotFoundException;
 import java.io.Reader;
-import java.util.LinkedList;
-import java.util.List;
-
 import io.github.gunjiro.hj.ResourceProvider.FailedException;
 import io.github.gunjiro.hj.command.CommandAnalyzer;
 import io.github.gunjiro.hj.command.executor.CommandExecutor;
@@ -16,14 +13,9 @@ public class AppRequestOperator {
     private final MessagePrinter messagePrinter;
 
     private final Implementor implementor;
-    private final List<Observer> observers = new LinkedList<>();
 
     public static interface Implementor {
         public void quit();
-    }
-
-    public static interface Observer {
-        public void notifyQuit();
     }
 
     public AppRequestOperator(ResourceProvider provider, StringPrinter strinngPrinter, MessagePrinter messagePrinter, Implementor implementor) {
@@ -31,10 +23,6 @@ public class AppRequestOperator {
         this.stringPrinter = strinngPrinter;
         this.messagePrinter = messagePrinter;
         this.implementor = implementor;
-    }
-
-    public void addObserver(Observer observer) {
-        observers.add(observer);
     }
 
     public void operate(Environment environment, Request request) {
