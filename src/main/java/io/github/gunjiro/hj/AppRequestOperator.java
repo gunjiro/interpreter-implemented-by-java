@@ -9,18 +9,16 @@ import io.github.gunjiro.hj.processor.FileLoader;
 
 public class AppRequestOperator {
     private final ResourceProvider provider;
-    private final MessagePrinter messagePrinter;
-
     private final Implementor implementor;
 
     public static interface Implementor {
         public void quit();
         public void print(String output);
+        public void sendMessage(String message);
     }
 
-    public AppRequestOperator(ResourceProvider provider, MessagePrinter messagePrinter, Implementor implementor) {
+    public AppRequestOperator(ResourceProvider provider, Implementor implementor) {
         this.provider = provider;
-        this.messagePrinter = messagePrinter;
         this.implementor = implementor;
     }
 
@@ -45,13 +43,13 @@ public class AppRequestOperator {
                                 try {
                                     environment.addFunctions(reader);
                                 } catch (ApplicationException e) {
-                                    messagePrinter.printMessage(e.getMessage());
+                                    implementor.sendMessage(e.getMessage());
                                 }
                             }
 
                             @Override
                             public void sendMessage(String message) {
-                                messagePrinter.printMessage(message);
+                                implementor.sendMessage(message);
                             }
                             
                         }, new FileLoader.Factory() {
@@ -81,7 +79,7 @@ public class AppRequestOperator {
                     @Override
                     public void receive(CommandExecutor.Notification notification) {
                         if (notification instanceof CommandExecutor.CommandIsUnknown) {
-                            messagePrinter.printMessage(String.format("unknown command '%s'", ((CommandExecutor.CommandIsUnknown)notification).getCommand()));
+                            implementor.sendMessage(String.format("unknown command '%s'", ((CommandExecutor.CommandIsUnknown)notification).getCommand()));
                         }
                     }
 
@@ -118,7 +116,7 @@ public class AppRequestOperator {
 
                     @Override
                     public void printMessage(String message) {
-                        messagePrinter.printMessage(message);
+                        implementor.sendMessage(message);
                     }
 
                 });
