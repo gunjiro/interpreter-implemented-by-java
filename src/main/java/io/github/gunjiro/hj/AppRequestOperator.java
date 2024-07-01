@@ -9,18 +9,17 @@ import io.github.gunjiro.hj.processor.FileLoader;
 
 public class AppRequestOperator {
     private final ResourceProvider provider;
-    private final StringPrinter stringPrinter;
     private final MessagePrinter messagePrinter;
 
     private final Implementor implementor;
 
     public static interface Implementor {
         public void quit();
+        public void print(String output);
     }
 
-    public AppRequestOperator(ResourceProvider provider, StringPrinter strinngPrinter, MessagePrinter messagePrinter, Implementor implementor) {
+    public AppRequestOperator(ResourceProvider provider, MessagePrinter messagePrinter, Implementor implementor) {
         this.provider = provider;
-        this.stringPrinter = strinngPrinter;
         this.messagePrinter = messagePrinter;
         this.implementor = implementor;
     }
@@ -104,7 +103,7 @@ public class AppRequestOperator {
 
                             @Override
                             public void print(String output) {
-                                stringPrinter.print(output);
+                                implementor.print(output);
                             }
 
                         });

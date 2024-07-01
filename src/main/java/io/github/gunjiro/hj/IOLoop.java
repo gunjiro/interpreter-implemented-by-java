@@ -33,11 +33,16 @@ public class IOLoop {
      */
     public static IOLoop create(InputReceiver receiver, ResourceProvider provider, StringPrinter stringPrinter, MessagePrinter messagePrinter) {
         final State state = new State();
-        final AppRequestOperator operator = new AppRequestOperator(provider, stringPrinter, messagePrinter, new AppRequestOperator.Implementor() {
+        final AppRequestOperator operator = new AppRequestOperator(provider, messagePrinter, new AppRequestOperator.Implementor() {
 
             @Override
             public void quit() {
                 state.quit();
+            }
+
+            @Override
+            public void print(String output) {
+                stringPrinter.print(output);
             }
             
         });

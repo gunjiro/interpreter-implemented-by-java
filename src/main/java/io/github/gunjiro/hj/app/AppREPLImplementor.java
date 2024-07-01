@@ -8,6 +8,7 @@ import io.github.gunjiro.hj.InputReceiver;
 import io.github.gunjiro.hj.REPL;
 import io.github.gunjiro.hj.Request;
 import io.github.gunjiro.hj.RequestFactory;
+import io.github.gunjiro.hj.StringPrinter;
 import io.github.gunjiro.hj.SystemInInputReceiver;
 import io.github.gunjiro.hj.SystemOutMessagePrinter;
 import io.github.gunjiro.hj.SystemOutStringPrinter;
@@ -47,11 +48,17 @@ class AppREPLImplementor implements REPL.Implementor {
     }
 
     private AppRequestOperator createOperator() {
-        return new AppRequestOperator(new FileResourceProvider(), new SystemOutStringPrinter(), new SystemOutMessagePrinter(), new AppRequestOperator.Implementor() {
+        final StringPrinter stringPrinter = new SystemOutStringPrinter();
+        return new AppRequestOperator(new FileResourceProvider(), new SystemOutMessagePrinter(), new AppRequestOperator.Implementor() {
 
             @Override
             public void quit() {
                 isExited = true;
+            }
+
+            @Override
+            public void print(String output) {
+                stringPrinter.print(output);
             }
 
         });

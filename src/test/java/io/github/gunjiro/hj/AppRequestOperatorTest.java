@@ -11,11 +11,16 @@ public class AppRequestOperatorTest {
         final Request request = new CommandRequest(":q");
         final StringBuilder result = new StringBuilder();
 
-        final AppRequestOperator operator = new AppRequestOperator(null, null, null, new AppRequestOperator.Implementor() {
+        final AppRequestOperator operator = new AppRequestOperator(null, null, new AppRequestOperator.Implementor() {
 
             @Override
             public void quit() {
                 result.append(".....quit.....");
+            }
+
+            @Override
+            public void print(String output) {
+                throw new UnsupportedOperationException("Unimplemented method 'print'");
             }
 
         });
