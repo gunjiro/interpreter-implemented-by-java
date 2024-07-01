@@ -2,6 +2,9 @@ package io.github.gunjiro.hj;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+import java.io.FileNotFoundException;
+import java.io.Reader;
+
 import org.junit.Test;
 
 public class AppRequestOperatorTest {
@@ -11,7 +14,7 @@ public class AppRequestOperatorTest {
         final Request request = new CommandRequest(":q");
         final StringBuilder result = new StringBuilder();
 
-        final AppRequestOperator operator = new AppRequestOperator(null, new AppRequestOperator.Implementor() {
+        final AppRequestOperator operator = new AppRequestOperator(new AppRequestOperator.Implementor() {
 
             @Override
             public void quit() {
@@ -26,6 +29,13 @@ public class AppRequestOperatorTest {
             @Override
             public void sendMessage(String message) {
                 throw new UnsupportedOperationException("Unimplemented method 'sendMessage'");
+            }
+
+        }, new AppRequestOperator.Factory() {
+
+            @Override
+            public Reader createReader(String filename) throws FileNotFoundException {
+                throw new UnsupportedOperationException("Unimplemented method 'createReader'");
             }
 
         });

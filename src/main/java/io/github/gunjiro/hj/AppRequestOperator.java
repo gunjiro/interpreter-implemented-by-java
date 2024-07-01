@@ -2,14 +2,13 @@ package io.github.gunjiro.hj;
 
 import java.io.FileNotFoundException;
 import java.io.Reader;
-import io.github.gunjiro.hj.ResourceProvider.FailedException;
 import io.github.gunjiro.hj.command.CommandAnalyzer;
 import io.github.gunjiro.hj.command.executor.CommandExecutor;
 import io.github.gunjiro.hj.processor.FileLoader;
 
 public class AppRequestOperator {
-    private final ResourceProvider provider;
     private final Implementor implementor;
+    private final Factory factory;
 
     public static interface Implementor {
         public void quit();
@@ -17,9 +16,13 @@ public class AppRequestOperator {
         public void sendMessage(String message);
     }
 
-    public AppRequestOperator(ResourceProvider provider, Implementor implementor) {
-        this.provider = provider;
+    public static interface Factory {
+        public Reader createReader(String filename) throws FileNotFoundException;
+    }
+
+    public AppRequestOperator(Implementor implementor, Factory factory) {
         this.implementor = implementor;
+        this.factory = factory;
     }
 
     public void operate(Environment environment, Request request) {
@@ -56,11 +59,7 @@ public class AppRequestOperator {
 
                             @Override
                             public Reader createReader(String filename) throws FileNotFoundException {
-                                try {
-                                    return provider.open(filename);
-                                } catch (FailedException e) {
-                                    throw new FileNotFoundException(e.getMessage());
-                                }
+                                return factory.createReader(filename);
                             }
                             
                         });

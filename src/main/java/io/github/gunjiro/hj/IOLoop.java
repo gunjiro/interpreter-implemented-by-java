@@ -1,4 +1,10 @@
 package io.github.gunjiro.hj;
+
+import java.io.FileNotFoundException;
+import java.io.Reader;
+
+import io.github.gunjiro.hj.ResourceProvider.FailedException;
+
 public class IOLoop {
     private final RequestFactory factory;
     private final InputReceiver receiver;
@@ -33,7 +39,7 @@ public class IOLoop {
      */
     public static IOLoop create(InputReceiver receiver, ResourceProvider provider, StringPrinter stringPrinter, MessagePrinter messagePrinter) {
         final State state = new State();
-        final AppRequestOperator operator = new AppRequestOperator(provider, new AppRequestOperator.Implementor() {
+        final AppRequestOperator operator = new AppRequestOperator(new AppRequestOperator.Implementor() {
 
             @Override
             public void quit() {
@@ -48,6 +54,17 @@ public class IOLoop {
             @Override
             public void sendMessage(String message) {
                 messagePrinter.printMessage(message);
+            }
+            
+        }, new AppRequestOperator.Factory() {
+
+            @Override
+            public Reader createReader(String filename) throws FileNotFoundException {
+                try {
+                    return provider.open(filename);
+                } catch (FailedException e) {
+                    throw new FileNotFoundException(e.getMessage());
+                }
             }
             
         });
