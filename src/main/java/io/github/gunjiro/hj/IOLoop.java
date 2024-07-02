@@ -2,6 +2,7 @@ package io.github.gunjiro.hj;
 
 import java.io.FileNotFoundException;
 import java.io.Reader;
+import java.io.StringReader;
 
 import io.github.gunjiro.hj.ResourceProvider.FailedException;
 import io.github.gunjiro.hj.processor.FileLoader;
@@ -89,7 +90,14 @@ public class IOLoop {
                 })).load(name);
             }
             
-        }, environment);
+        }, new AppRequestOperator.Factory() {
+
+            @Override
+            public Thunk createThunk(String code) throws ApplicationException {
+                return environment.createThunk(new StringReader(code));
+            }
+            
+        });
         return new IOLoop(new RequestFactory(), receiver, operator, state);
     }
 

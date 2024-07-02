@@ -33,7 +33,14 @@ public class AppRequestOperatorTest {
                 throw new UnsupportedOperationException("Unimplemented method 'load'");
             }
 
-        }, new DefaultEnvironment());
+        }, new AppRequestOperator.Factory() {
+
+            @Override
+            public Thunk createThunk(String code) throws ApplicationException {
+                throw new UnsupportedOperationException("Unimplemented method 'createThunk'");
+            }
+            
+        });
         operator.operate(request);
 
         assertThat(result.toString(), is(".....quit....."));

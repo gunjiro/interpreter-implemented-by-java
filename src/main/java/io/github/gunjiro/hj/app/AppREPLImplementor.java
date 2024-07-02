@@ -1,6 +1,7 @@
 package io.github.gunjiro.hj.app;
 
 import java.io.Reader;
+import java.io.StringReader;
 
 import io.github.gunjiro.hj.AppRequestOperator;
 import io.github.gunjiro.hj.ApplicationException;
@@ -15,6 +16,7 @@ import io.github.gunjiro.hj.StringPrinter;
 import io.github.gunjiro.hj.SystemInInputReceiver;
 import io.github.gunjiro.hj.SystemOutMessagePrinter;
 import io.github.gunjiro.hj.SystemOutStringPrinter;
+import io.github.gunjiro.hj.Thunk;
 import io.github.gunjiro.hj.processor.FileLoader;
 
 class AppREPLImplementor implements REPL.Implementor {
@@ -92,7 +94,14 @@ class AppREPLImplementor implements REPL.Implementor {
                 }).load(name);
             }
 
-        }, environment);
+        }, new AppRequestOperator.Factory() {
+
+            @Override
+            public Thunk createThunk(String code) throws ApplicationException {
+                return environment.createThunk(new StringReader(code));
+            }
+            
+        });
     }
 
     @Override

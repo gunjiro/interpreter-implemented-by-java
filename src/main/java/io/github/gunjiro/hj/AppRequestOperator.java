@@ -1,13 +1,11 @@
 package io.github.gunjiro.hj;
 
-import java.io.StringReader;
-
 import io.github.gunjiro.hj.command.CommandAnalyzer;
 import io.github.gunjiro.hj.command.executor.CommandExecutor;
 
 public class AppRequestOperator {
     private final Implementor implementor;
-    private final Environment environment;
+    private final Factory factory;
 
     public static interface Implementor {
         public void load(String name);
@@ -16,9 +14,13 @@ public class AppRequestOperator {
         public void sendMessage(String message);
     }
 
-    public AppRequestOperator(Implementor implementor, Environment environment) {
+    public static interface Factory {
+        public Thunk createThunk(String code) throws ApplicationException;
+    }
+
+    public AppRequestOperator(Implementor implementor, Factory factory) {
         this.implementor = implementor;
-        this.environment = environment;
+        this.factory = factory;
     }
 
     public void operate(Request request) {
@@ -99,7 +101,7 @@ public class AppRequestOperator {
 
                     @Override
                     public Thunk createThunk(String code) throws ApplicationException {
-                        return environment.createThunk(new StringReader(code));
+                        return factory.createThunk(code);
                     }
                     
                 });
