@@ -90,6 +90,11 @@ public class AppRequestOperator {
                         implementor.sendMessage(message);
                     }
 
+                    @Override
+                    public void sendBreak() {
+                        implementor.sendMessage("");
+                    }
+
                 }, new EvaluationRequestAction.Factory() {
 
                     @Override

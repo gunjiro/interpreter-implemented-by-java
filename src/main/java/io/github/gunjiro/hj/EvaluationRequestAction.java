@@ -6,6 +6,7 @@ public class EvaluationRequestAction {
 
     public static interface Implementor {
         public void sendValue(Value value);
+        public void sendBreak();
         public void sendMessage(String message);
     }
 
@@ -29,12 +30,12 @@ public class EvaluationRequestAction {
 
         try {
             implementor.sendValue(factory.createThunk(code).eval());
-            implementor.sendMessage("");
+            implementor.sendBreak();
         } catch (ApplicationException e) {
-            implementor.sendMessage("");
+            implementor.sendBreak();
             implementor.sendMessage(e.getMessage());
         } catch (EvaluationException e) {
-            implementor.sendMessage("");
+            implementor.sendBreak();
             implementor.sendMessage(e.getMessage());
         }
     }

@@ -23,6 +23,10 @@ public class EvaluationRequestActionTest {
             public void sendMessage(String message) {
                 throw new UnsupportedOperationException("Unimplemented method 'printMessage'");
             }
+
+            @Override
+            public void sendBreak() {
+            }
             
         }, new EvaluationRequestAction.Factory() {
 
@@ -70,6 +74,10 @@ public class EvaluationRequestActionTest {
             public void sendMessage(String message) {
             }
 
+            @Override
+            public void sendBreak() {
+            }
+
         }, new EvaluationRequestAction.Factory() {
 
             @Override
@@ -100,6 +108,10 @@ public class EvaluationRequestActionTest {
             @Override
             public void sendMessage(String message) {
                 builder.append(message);
+            }
+
+            @Override
+            public void sendBreak() {
             }
             
         }, new EvaluationRequestAction.Factory() {
@@ -132,6 +144,10 @@ public class EvaluationRequestActionTest {
             @Override
             public void sendMessage(String message) {
                 builder.append(message);
+            }
+
+            @Override
+            public void sendBreak() {
             }
             
         }, new EvaluationRequestAction.Factory() {
