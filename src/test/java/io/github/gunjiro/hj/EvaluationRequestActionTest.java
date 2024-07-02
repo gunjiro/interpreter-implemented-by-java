@@ -27,14 +27,13 @@ public class EvaluationRequestActionTest {
         }, new EvaluationRequestAction.Factory() {
 
             @Override
-            public Thunk createThunk(Environment environment, String code) throws ApplicationException {
-                // TODO Auto-generated method stub
+            public Thunk createThunk(String code) throws ApplicationException {
                 throw new UnsupportedOperationException("Unimplemented method 'createThunk'");
             }
             
         });
 
-        action.take(null, new EvaluationRequest(code));
+        action.take(new EvaluationRequest(code));
     }
 
     // 式の場合は評価して出力する
@@ -74,13 +73,13 @@ public class EvaluationRequestActionTest {
         }, new EvaluationRequestAction.Factory() {
 
             @Override
-            public Thunk createThunk(Environment environment, String code) throws ApplicationException {
+            public Thunk createThunk(String code) throws ApplicationException {
                 return environment.createThunk(new StringReader(code));
             }
             
         });
 
-        action.take(environment, new EvaluationRequest(code));
+        action.take(new EvaluationRequest(code));
 
         assertThat(builder.toString(), is("2"));
     }
@@ -106,13 +105,13 @@ public class EvaluationRequestActionTest {
         }, new EvaluationRequestAction.Factory() {
 
             @Override
-            public Thunk createThunk(Environment environment, String code) throws ApplicationException {
+            public Thunk createThunk(String code) throws ApplicationException {
                 return environment.createThunk(new StringReader(code));
             }
             
         });
 
-        action.take(environment, new EvaluationRequest(code));
+        action.take(new EvaluationRequest(code));
 
         assertThat(builder.toString(), is(not("")));
     }
@@ -138,13 +137,13 @@ public class EvaluationRequestActionTest {
         }, new EvaluationRequestAction.Factory() {
 
             @Override
-            public Thunk createThunk(Environment environment, String code) throws ApplicationException {
+            public Thunk createThunk(String code) throws ApplicationException {
                 return environment.createThunk(new StringReader(code));
             }
             
         });
 
-        action.take(environment, new EvaluationRequest(code));
+        action.take(new EvaluationRequest(code));
 
         assertThat(builder.toString(), is(not("")));
     }

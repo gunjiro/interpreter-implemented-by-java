@@ -93,12 +93,12 @@ public class AppRequestOperator {
                 }, new EvaluationRequestAction.Factory() {
 
                     @Override
-                    public Thunk createThunk(Environment environment, String code) throws ApplicationException {
+                    public Thunk createThunk(String code) throws ApplicationException {
                         return environment.createThunk(new StringReader(code));
                     }
                     
                 });
-                action.take(environment, request);
+                action.take(request);
                 return null;
             }
         });

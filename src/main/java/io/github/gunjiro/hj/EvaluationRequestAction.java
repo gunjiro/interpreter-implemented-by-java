@@ -10,7 +10,7 @@ public class EvaluationRequestAction {
     }
 
     public static interface Factory {
-        public Thunk createThunk(Environment environment, String code) throws ApplicationException;
+        public Thunk createThunk(String code) throws ApplicationException;
     }
 
     public EvaluationRequestAction(Implementor implementor, Factory factory) {
@@ -18,17 +18,17 @@ public class EvaluationRequestAction {
         this.factory = factory;
     }
 
-    public void take(Environment environment, EvaluationRequest request) {
-        take(environment, request.getInput());
+    public void take(EvaluationRequest request) {
+        take(request.getInput());
     }
 
-    private void take(Environment environment, String code) {
+    private void take(String code) {
         if (code.isEmpty()) {
             return;
         }
 
         try {
-            implementor.print(factory.createThunk(environment, code).eval());
+            implementor.print(factory.createThunk(code).eval());
             implementor.printMessage("");
         } catch (ApplicationException e) {
             implementor.printMessage("");
