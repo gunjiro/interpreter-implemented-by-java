@@ -15,12 +15,12 @@ public class EvaluationRequestActionTest {
         final EvaluationRequestAction action = new EvaluationRequestAction(new EvaluationRequestAction.Implementor() {
 
             @Override
-            public void print(Value value) {
+            public void sendValue(Value value) {
                 throw new UnsupportedOperationException("Unimplemented method 'print'");
             }
 
             @Override
-            public void printMessage(String message) {
+            public void sendMessage(String message) {
                 throw new UnsupportedOperationException("Unimplemented method 'printMessage'");
             }
             
@@ -49,7 +49,7 @@ public class EvaluationRequestActionTest {
         final EvaluationRequestAction action = new EvaluationRequestAction(new EvaluationRequestAction.Implementor() {
 
             @Override
-            public void print(Value value) {
+            public void sendValue(Value value) {
                 final ValuePrinter printer = new ValuePrinter(new ValuePrinter.Implementor() {
 
                     @Override
@@ -67,7 +67,7 @@ public class EvaluationRequestActionTest {
             }
 
             @Override
-            public void printMessage(String message) {
+            public void sendMessage(String message) {
             }
 
         }, new EvaluationRequestAction.Factory() {
@@ -94,11 +94,11 @@ public class EvaluationRequestActionTest {
         final EvaluationRequestAction action = new EvaluationRequestAction(new EvaluationRequestAction.Implementor() {
 
             @Override
-            public void print(Value value) {
+            public void sendValue(Value value) {
             }
 
             @Override
-            public void printMessage(String message) {
+            public void sendMessage(String message) {
                 builder.append(message);
             }
             
@@ -126,11 +126,11 @@ public class EvaluationRequestActionTest {
         final EvaluationRequestAction action = new EvaluationRequestAction(new EvaluationRequestAction.Implementor() {
 
             @Override
-            public void print(Value value) {
+            public void sendValue(Value value) {
             }
 
             @Override
-            public void printMessage(String message) {
+            public void sendMessage(String message) {
                 builder.append(message);
             }
             

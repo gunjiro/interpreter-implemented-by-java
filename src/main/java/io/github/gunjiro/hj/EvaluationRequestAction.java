@@ -5,8 +5,8 @@ public class EvaluationRequestAction {
     private final Factory factory;
 
     public static interface Implementor {
-        public void print(Value value);
-        public void printMessage(String message);
+        public void sendValue(Value value);
+        public void sendMessage(String message);
     }
 
     public static interface Factory {
@@ -28,14 +28,14 @@ public class EvaluationRequestAction {
         }
 
         try {
-            implementor.print(factory.createThunk(code).eval());
-            implementor.printMessage("");
+            implementor.sendValue(factory.createThunk(code).eval());
+            implementor.sendMessage("");
         } catch (ApplicationException e) {
-            implementor.printMessage("");
-            implementor.printMessage(e.getMessage());
+            implementor.sendMessage("");
+            implementor.sendMessage(e.getMessage());
         } catch (EvaluationException e) {
-            implementor.printMessage("");
-            implementor.printMessage(e.getMessage());
+            implementor.sendMessage("");
+            implementor.sendMessage(e.getMessage());
         }
     }
 }

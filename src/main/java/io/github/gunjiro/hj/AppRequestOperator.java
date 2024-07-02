@@ -67,7 +67,7 @@ public class AppRequestOperator {
                 final EvaluationRequestAction action = new EvaluationRequestAction(new EvaluationRequestAction.Implementor() {
 
                     @Override
-                    public void print(Value value) {
+                    public void sendValue(Value value) {
                         final ValuePrinter printer = new ValuePrinter(new ValuePrinter.Implementor() {
 
                             @Override
@@ -80,13 +80,13 @@ public class AppRequestOperator {
                         try {
                             printer.print(value);
                         } catch (ApplicationException e) {
-                            printMessage("");
-                            printMessage(e.getMessage());
+                            sendMessage("");
+                            sendMessage(e.getMessage());
                         }
                     }
 
                     @Override
-                    public void printMessage(String message) {
+                    public void sendMessage(String message) {
                         implementor.sendMessage(message);
                     }
 
