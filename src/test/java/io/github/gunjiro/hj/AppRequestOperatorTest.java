@@ -33,6 +33,11 @@ public class AppRequestOperatorTest {
                 throw new UnsupportedOperationException("Unimplemented method 'load'");
             }
 
+            @Override
+            public void sendBreak() {
+                throw new UnsupportedOperationException("Unimplemented method 'sendBreak'");
+            }
+
         }, new AppRequestOperator.Factory() {
 
             @Override

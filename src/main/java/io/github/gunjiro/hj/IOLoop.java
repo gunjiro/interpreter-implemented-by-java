@@ -89,6 +89,11 @@ public class IOLoop {
                     
                 })).load(name);
             }
+
+            @Override
+            public void sendBreak() {
+                messagePrinter.printMessage("");
+            }
             
         }, new AppRequestOperator.Factory() {
 

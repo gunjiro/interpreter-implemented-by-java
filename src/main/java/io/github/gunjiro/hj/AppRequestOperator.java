@@ -11,6 +11,7 @@ public class AppRequestOperator {
         public void load(String name);
         public void quit();
         public void sendText(String text);
+        public void sendBreak();
         public void sendMessage(String message);
     }
 
@@ -94,7 +95,7 @@ public class AppRequestOperator {
 
                     @Override
                     public void sendBreak() {
-                        implementor.sendMessage("");
+                        implementor.sendBreak();
                     }
 
                 }, new EvaluationRequestAction.Factory() {

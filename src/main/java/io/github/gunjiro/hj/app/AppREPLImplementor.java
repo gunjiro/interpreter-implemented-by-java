@@ -94,6 +94,11 @@ class AppREPLImplementor implements REPL.Implementor {
                 }).load(name);
             }
 
+            @Override
+            public void sendBreak() {
+                messagePrinter.printMessage("");
+            }
+
         }, new AppRequestOperator.Factory() {
 
             @Override
