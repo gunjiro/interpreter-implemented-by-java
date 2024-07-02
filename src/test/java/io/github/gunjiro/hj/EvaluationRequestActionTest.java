@@ -24,6 +24,14 @@ public class EvaluationRequestActionTest {
                 throw new UnsupportedOperationException("Unimplemented method 'printMessage'");
             }
             
+        }, new EvaluationRequestAction.Factory() {
+
+            @Override
+            public Thunk createThunk(Environment environment, String code) throws ApplicationException {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'createThunk'");
+            }
+            
         });
 
         action.take(null, new EvaluationRequest(code));
@@ -63,6 +71,13 @@ public class EvaluationRequestActionTest {
             public void printMessage(String message) {
             }
 
+        }, new EvaluationRequestAction.Factory() {
+
+            @Override
+            public Thunk createThunk(Environment environment, String code) throws ApplicationException {
+                return environment.createThunk(new StringReader(code));
+            }
+            
         });
 
         action.take(environment, new EvaluationRequest(code));
@@ -88,6 +103,13 @@ public class EvaluationRequestActionTest {
                 builder.append(message);
             }
             
+        }, new EvaluationRequestAction.Factory() {
+
+            @Override
+            public Thunk createThunk(Environment environment, String code) throws ApplicationException {
+                return environment.createThunk(new StringReader(code));
+            }
+            
         });
 
         action.take(environment, new EvaluationRequest(code));
@@ -111,6 +133,13 @@ public class EvaluationRequestActionTest {
             @Override
             public void printMessage(String message) {
                 builder.append(message);
+            }
+            
+        }, new EvaluationRequestAction.Factory() {
+
+            @Override
+            public Thunk createThunk(Environment environment, String code) throws ApplicationException {
+                return environment.createThunk(new StringReader(code));
             }
             
         });

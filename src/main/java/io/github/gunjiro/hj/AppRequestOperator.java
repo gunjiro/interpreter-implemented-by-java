@@ -1,5 +1,7 @@
 package io.github.gunjiro.hj;
 
+import java.io.StringReader;
+
 import io.github.gunjiro.hj.command.CommandAnalyzer;
 import io.github.gunjiro.hj.command.executor.CommandExecutor;
 
@@ -88,6 +90,13 @@ public class AppRequestOperator {
                         implementor.sendMessage(message);
                     }
 
+                }, new EvaluationRequestAction.Factory() {
+
+                    @Override
+                    public Thunk createThunk(Environment environment, String code) throws ApplicationException {
+                        return environment.createThunk(new StringReader(code));
+                    }
+                    
                 });
                 action.take(environment, request);
                 return null;

@@ -1,16 +1,21 @@
 package io.github.gunjiro.hj;
-import java.io.StringReader;
 
 public class EvaluationRequestAction {
     private final Implementor implementor;
+    private final Factory factory;
 
     public static interface Implementor {
         public void print(Value value);
         public void printMessage(String message);
     }
 
-    public EvaluationRequestAction(Implementor implementor) {
+    public static interface Factory {
+        public Thunk createThunk(Environment environment, String code) throws ApplicationException;
+    }
+
+    public EvaluationRequestAction(Implementor implementor, Factory factory) {
         this.implementor = implementor;
+        this.factory = factory;
     }
 
     public void take(Environment environment, EvaluationRequest request) {
@@ -23,7 +28,7 @@ public class EvaluationRequestAction {
         }
 
         try {
-            implementor.print(createThunk(environment, code).eval());
+            implementor.print(factory.createThunk(environment, code).eval());
             implementor.printMessage("");
         } catch (ApplicationException e) {
             implementor.printMessage("");
@@ -32,9 +37,5 @@ public class EvaluationRequestAction {
             implementor.printMessage("");
             implementor.printMessage(e.getMessage());
         }
-    }
-
-    private Thunk createThunk(Environment environment, String code) throws ApplicationException {
-        return environment.createThunk(new StringReader(code));
     }
 }
