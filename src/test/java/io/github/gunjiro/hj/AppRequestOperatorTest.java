@@ -19,7 +19,7 @@ public class AppRequestOperatorTest {
             }
 
             @Override
-            public void print(String output) {
+            public void sendText(String output) {
                 throw new UnsupportedOperationException("Unimplemented method 'print'");
             }
 

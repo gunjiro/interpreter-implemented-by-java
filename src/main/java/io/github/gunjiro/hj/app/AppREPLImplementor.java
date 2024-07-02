@@ -64,8 +64,8 @@ class AppREPLImplementor implements REPL.Implementor {
             }
 
             @Override
-            public void print(String output) {
-                stringPrinter.print(output);
+            public void sendText(String text) {
+                stringPrinter.print(text);
             }
            
             @Override

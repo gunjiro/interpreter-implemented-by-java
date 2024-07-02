@@ -49,7 +49,7 @@ public class IOLoop {
             }
 
             @Override
-            public void print(String output) {
+            public void sendText(String output) {
                 stringPrinter.print(output);
             }
 

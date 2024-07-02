@@ -10,7 +10,7 @@ public class AppRequestOperator {
     public static interface Implementor {
         public void load(String name);
         public void quit();
-        public void print(String output);
+        public void sendText(String text);
         public void sendMessage(String message);
     }
 
@@ -74,7 +74,7 @@ public class AppRequestOperator {
 
                             @Override
                             public void print(String output) {
-                                implementor.print(output);
+                                implementor.sendText(output);
                             }
 
                         });
