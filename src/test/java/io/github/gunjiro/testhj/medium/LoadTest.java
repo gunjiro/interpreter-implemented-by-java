@@ -29,7 +29,8 @@ public class LoadTest {
         final App app = factory.create(new InputReceiver() {
             @Override
             public String receive() {
-                return inputs.poll();
+                assert !inputs.isEmpty() : "..... already received all inputs. .....";
+                return inputs.pop();
             }
         }, new ResourceProvider() {
             @Override

@@ -13,13 +13,14 @@ public class AppTest {
     // :qでメッセージを出力して終了
     @Test
     public void runShouldExitWhenInputIsQuitCommand() {
-        final String input = ":q";
+        final LinkedList<String> inputs = new LinkedList<>(List.of(":q"));
         final StringBuilder builder = new StringBuilder();
         final AppFactory factory = new AppFactory();
         final App app = factory.create(new InputReceiver() {
             @Override
             public String receive() {
-                return input;
+                assert !inputs.isEmpty() : "..... already received all inputs. .....";
+                return inputs.pop();
             }
         }, null, null, new MessagePrinter() {
             @Override
@@ -43,7 +44,8 @@ public class AppTest {
         final App app = factory.create(new InputReceiver() {
             @Override
             public String receive() {
-                return inputs.poll();
+                assert !inputs.isEmpty() : "..... already received all inputs. .....";
+                return inputs.pop();
             }
         }, new ResourceProvider() {
             @Override
@@ -74,7 +76,8 @@ public class AppTest {
         final App app = factory.create(new InputReceiver() {
             @Override
             public String receive() {
-                return inputs.poll();
+                assert !inputs.isEmpty() : "..... already received all inputs. .....";
+                return inputs.pop();
             }
         }, new ResourceProvider() {
             @Override
@@ -102,7 +105,8 @@ public class AppTest {
         final App app = factory.create(new InputReceiver() {
             @Override
             public String receive() {
-                return inputs.poll();
+                assert !inputs.isEmpty() : "..... already received all inputs. .....";
+                return inputs.pop();
             }
         }, new ResourceProvider() {
             @Override
@@ -131,7 +135,8 @@ public class AppTest {
         final App app = factory.create(new InputReceiver() {
             @Override
             public String receive() {
-                return inputs.poll();
+                assert !inputs.isEmpty() : "..... already received all inputs. .....";
+                return inputs.pop();
             }
         }, new ResourceProvider() {
             @Override

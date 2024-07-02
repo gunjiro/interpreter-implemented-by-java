@@ -15,6 +15,7 @@ public class IOLoopTest {
         final IOLoop ioLoop = IOLoop.create(new InputReceiver() {
             @Override
             public String receive() {
+                assert !inputs.isEmpty() : "..... already received all inputs. .....";
                 return inputs.pop();
             }
         }, null, null, null, null);
