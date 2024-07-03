@@ -8,14 +8,10 @@ import io.github.gunjiro.hj.ApplicationException;
 import io.github.gunjiro.hj.DefaultEnvironment;
 import io.github.gunjiro.hj.Environment;
 import io.github.gunjiro.hj.InputReceiver;
-import io.github.gunjiro.hj.MessagePrinter;
 import io.github.gunjiro.hj.REPL;
 import io.github.gunjiro.hj.Request;
 import io.github.gunjiro.hj.RequestFactory;
-import io.github.gunjiro.hj.StringPrinter;
 import io.github.gunjiro.hj.SystemInInputReceiver;
-import io.github.gunjiro.hj.SystemOutMessagePrinter;
-import io.github.gunjiro.hj.SystemOutStringPrinter;
 import io.github.gunjiro.hj.Thunk;
 import io.github.gunjiro.hj.processor.FileLoader;
 
@@ -54,8 +50,6 @@ class AppREPLImplementor implements REPL.Implementor {
     }
 
     private AppRequestOperator createOperator() {
-        final StringPrinter stringPrinter = new SystemOutStringPrinter();
-        final MessagePrinter messagePrinter = new SystemOutMessagePrinter();
         return new AppRequestOperator(new AppRequestOperator.Implementor() {
 
             @Override
@@ -65,12 +59,12 @@ class AppREPLImplementor implements REPL.Implementor {
 
             @Override
             public void sendText(String text) {
-                stringPrinter.print(text);
+                System.out.print(text);
             }
            
             @Override
             public void sendMessage(String message) {
-                messagePrinter.printMessage(message);
+                System.out.println(message);
             }
 
             @Override
@@ -100,7 +94,7 @@ class AppREPLImplementor implements REPL.Implementor {
 
             @Override
             public void sendBreak() {
-                messagePrinter.printMessage("");
+                System.out.println();
             }
 
         }, new AppRequestOperator.Factory() {
