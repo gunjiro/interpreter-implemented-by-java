@@ -75,7 +75,7 @@ class AppREPLImplementor implements REPL.Implementor {
 
             @Override
             public void load(String name) {
-                FileLoader.create(new FileLoader.Implementor() {
+                final FileLoader loader = FileLoader.create(new FileLoader.Implementor() {
 
                     @Override
                     public void storeFunctions(Reader reader) {
@@ -85,13 +85,17 @@ class AppREPLImplementor implements REPL.Implementor {
                             sendMessage(e.getMessage());
                         }
                     }
+                    
+                });
+                loader.addObserver(new FileLoader.Observer() {
 
                     @Override
-                    public void sendMessage(String message) {
-                        messagePrinter.printMessage(message);
+                    public void receiveMessage(String message) {
+                        sendMessage(message);
                     }
-                    
-                }).load(name);
+
+                });
+                loader.load(name);
             }
 
             @Override

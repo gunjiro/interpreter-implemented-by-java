@@ -25,16 +25,19 @@ public class FileLoaderTest {
                 throw new UnsupportedOperationException("Unimplemented method 'storeFunctions'");
             }
 
-            @Override
-            public void sendMessage(String message) {
-                output.append(message);
-            }
-            
         }, new FileLoader.Factory() {
 
             @Override
             public Reader createReader(String filename) throws FileNotFoundException {
                 throw new FileNotFoundException("..... file not found .....");
+            }
+            
+        });
+        loader.addObserver(new FileLoader.Observer() {
+
+            @Override
+            public void receiveMessage(String message) {
+                output.append(message);
             }
             
         });
@@ -54,11 +57,6 @@ public class FileLoaderTest {
                 messages.add("..... stored .....");
             }
 
-            @Override
-            public void sendMessage(String message) {
-                messages.add(message);
-            }
-            
         }, new FileLoader.Factory() {
 
             @Override
@@ -66,6 +64,14 @@ public class FileLoaderTest {
                 return new StringReader(".....code.....");
             }
             
+        });
+        loader.addObserver(new FileLoader.Observer() {
+
+            @Override
+            public void receiveMessage(String message) {
+                messages.add(message);
+            }
+
         });
         loader.load("..... filename .....");
 
@@ -83,11 +89,6 @@ public class FileLoaderTest {
             public void storeFunctions(Reader reader) {
             }
 
-            @Override
-            public void sendMessage(String message) {
-                messages.add(message);
-            }
-            
         }, new FileLoader.Factory() {
 
             @Override
@@ -104,6 +105,14 @@ public class FileLoaderTest {
                         throw new IOException("..... throws io exception by close .....");
                     }
                 };
+            }
+            
+        });
+        loader.addObserver(new FileLoader.Observer() {
+
+            @Override
+            public void receiveMessage(String message) {
+                messages.add(message);
             }
             
         });

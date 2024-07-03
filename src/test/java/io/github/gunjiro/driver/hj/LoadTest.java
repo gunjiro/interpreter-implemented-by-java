@@ -45,10 +45,6 @@ public class LoadTest {
                         }
                     }
 
-                    @Override
-                    public void sendMessage(String message) {
-                    }
-                    
                 }, new FileLoader.Factory() {
 
                     @Override

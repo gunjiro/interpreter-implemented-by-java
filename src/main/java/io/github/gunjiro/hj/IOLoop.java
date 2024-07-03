@@ -60,7 +60,7 @@ public class IOLoop {
 
             @Override
             public void load(String name) {
-                (new FileLoader(new FileLoader.Implementor() {
+                final FileLoader loader = new FileLoader(new FileLoader.Implementor() {
 
                     @Override
                     public void storeFunctions(Reader reader) {
@@ -71,11 +71,6 @@ public class IOLoop {
                         }
                     }
 
-                    @Override
-                    public void sendMessage(String message) {
-                        messagePrinter.printMessage(message);
-                    }
-                    
                 }, new FileLoader.Factory() {
 
                     @Override
@@ -87,7 +82,16 @@ public class IOLoop {
                         }
                     }
                     
-                })).load(name);
+                });
+                loader.addObserver(new FileLoader.Observer() {
+
+                    @Override
+                    public void receiveMessage(String message) {
+                        sendMessage(message);
+                    }
+                    
+                });
+                loader.load(name);
             }
 
             @Override
