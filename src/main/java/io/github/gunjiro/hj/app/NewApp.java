@@ -1,5 +1,6 @@
 package io.github.gunjiro.hj.app;
 
+import io.github.gunjiro.hj.DefaultEnvironment;
 import io.github.gunjiro.hj.REPL;
 
 public class NewApp {
@@ -8,6 +9,6 @@ public class NewApp {
     }
 
     private static REPL createREPL() {
-        return new REPL(AppREPLImplementor.create());
+        return REPL.create(new DefaultEnvironment());
     }
 }

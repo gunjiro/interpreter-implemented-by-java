@@ -1,5 +1,10 @@
 package io.github.gunjiro.hj;
 
+import java.io.Reader;
+import java.io.StringReader;
+
+import io.github.gunjiro.hj.processor.FileLoader;
+
 public class REPL {
     public static interface Implementor {
         /**
@@ -33,6 +38,109 @@ public class REPL {
      */
     public REPL(Implementor implementor) {
         this.implementor = implementor;
+    }
+
+    public static REPL create(Environment environment) {
+        return new REPL(new Implementor() {
+            private boolean isExited = false;
+
+            @Override
+            public String waitForInput() {
+                final InputReceiver receiver = SystemInInputReceiver.create();
+                return receiver.receive();
+            }
+
+            @Override
+            public void showQuitMessage() {
+                printMessage("Bye.");
+            }
+
+            @Override
+            public REPL.Result execute(String input) {
+                operate(input);
+                return isExited ? REPL.Result.Quit : REPL.Result.Continue;
+            }
+
+            private void printMessage(String message) {
+                System.out.println(message);
+            }
+
+            private void printText(String text) {
+                System.out.print(text);
+            }
+
+            private void startANewLine() {
+                System.out.println();
+            }
+
+            private void operate(String input) {
+                final Request request = createRequest(input);
+                createOperator().operate(request);
+            }
+
+            private Request createRequest(String input) {
+                final RequestFactory factory = new RequestFactory();
+                return factory.createRequest(input);
+            }
+
+            private AppRequestOperator createOperator() {
+                return new AppRequestOperator(new AppRequestOperator.Implementor() {
+
+                    @Override
+                    public void quit() {
+                        isExited = true;
+                    }
+
+                    @Override
+                    public void sendText(String text) {
+                        printText(text);
+                    }
+
+                    @Override
+                    public void sendMessage(String message) {
+                        printMessage(message);
+                    }
+
+                    @Override
+                    public void load(String name) {
+                        final FileLoader loader = FileLoader.create(new FileLoader.Implementor() {
+
+                            @Override
+                            public void storeFunctions(Reader reader) {
+                                try {
+                                    environment.addFunctions(reader);
+                                } catch (ApplicationException e) {
+                                    printMessage(e.getMessage());
+                                }
+                            }
+
+                        });
+                        loader.addObserver(new FileLoader.Observer() {
+
+                            @Override
+                            public void receiveMessage(String message) {
+                                printMessage(message);
+                            }
+
+                        });
+                        loader.load(name);
+                    }
+
+                    @Override
+                    public void sendBreak() {
+                        startANewLine();
+                    }
+
+                }, new AppRequestOperator.Factory() {
+
+                    @Override
+                    public Thunk createThunk(String code) throws ApplicationException {
+                        return environment.createThunk(new StringReader(code));
+                    }
+
+                });
+            }
+        });
     }
 
     /**
