@@ -1,4 +1,4 @@
-package io.github.gunjiro.testhj.medium;
+package io.github.gunjiro.driver.hj;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
