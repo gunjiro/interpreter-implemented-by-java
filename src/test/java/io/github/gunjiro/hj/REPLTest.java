@@ -2,57 +2,38 @@ package io.github.gunjiro.hj;
 
 import org.junit.Test;
 
+import io.github.gunjiro.hj.ui.OutputOperation;
+
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
 public class REPLTest {
+
     @Test
-    public void testRun() {
+    public void verifyLoop() {
         // REPLは入力と実行の繰り返しを制御する。
         // このテストでは４回、空の入力をしたあと、５回目の終了コマンドで終了することを検証する。
-        final CountREPLImplementor implementor = CountREPLImplementor.create("", "", "", "", ":q");
-        final REPL repl = new REPL(implementor);
+        final Deque<String> messages = new LinkedList<>();
+
+        final Deque<String> inputs = new LinkedList<>(List.of("", "", "", "", ":q"));
+        final REPL repl = REPL.create(new DefaultEnvironment(), new OutputOperation(), new InputReceiver() {
+
+            @Override
+            public String receive() {
+                assert !inputs.isEmpty() : "..... already received all inputs .....";
+                messages.add("..... received .....");
+                return inputs.pop();
+            }
+            
+        });
 
         repl.run();
 
-        assertThat(implementor.getCount(), is(5));
-    }
-
-    private static class CountREPLImplementor implements REPL.Implementor {
-        private final LinkedList<String> inputStack;
-        private int count;
-
-        private CountREPLImplementor(LinkedList<String> inputStack, int count) {
-            this.inputStack = inputStack;
-            this.count = count;
-        }
-
-        private static CountREPLImplementor create(String... inputs) {
-            return new CountREPLImplementor(new LinkedList<String>(List.of(inputs)), 0);
-        }
-
-        public int getCount() {
-            return count;
-        }
-
-        @Override
-        public String waitForInput() {
-            count++;
-            return inputStack.pop();
-        }
-
-        @Override
-        public REPL.Result execute(String input) {
-            return ":q".equals(input) ? REPL.Result.Quit : REPL.Result.Continue;
-        }
-
-        @Override
-        public void showQuitMessage() {
-        }
-
+        assertThat(messages, hasSize(5));
     }
 
 }
