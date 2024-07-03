@@ -71,17 +71,15 @@ public class IOLoop {
                         }
                     }
 
-                }, new FileLoader.Factory() {
-
                     @Override
-                    public Reader createReader(String filename) throws FileNotFoundException {
+                    public Reader open(String filename) throws FileNotFoundException {
                         try {
                             return provider.open(filename);
                         } catch (FailedException e) {
                             throw new FileNotFoundException(e.getMessage());
                         }
                     }
-                    
+
                 });
                 loader.addObserver(new FileLoader.Observer() {
 

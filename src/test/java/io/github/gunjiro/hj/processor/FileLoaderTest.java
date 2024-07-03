@@ -25,13 +25,11 @@ public class FileLoaderTest {
                 throw new UnsupportedOperationException("Unimplemented method 'storeFunctions'");
             }
 
-        }, new FileLoader.Factory() {
-
             @Override
-            public Reader createReader(String filename) throws FileNotFoundException {
+            public Reader open(String filename) throws FileNotFoundException {
                 throw new FileNotFoundException("..... file not found .....");
             }
-            
+
         });
         loader.addObserver(new FileLoader.Observer() {
 
@@ -57,13 +55,11 @@ public class FileLoaderTest {
                 messages.add("..... stored .....");
             }
 
-        }, new FileLoader.Factory() {
-
             @Override
-            public Reader createReader(String filename) throws FileNotFoundException {
+            public Reader open(String filename) throws FileNotFoundException {
                 return new StringReader(".....code.....");
             }
-            
+
         });
         loader.addObserver(new FileLoader.Observer() {
 
@@ -89,10 +85,8 @@ public class FileLoaderTest {
             public void storeFunctions(Reader reader) {
             }
 
-        }, new FileLoader.Factory() {
-
             @Override
-            public Reader createReader(String filename) throws FileNotFoundException {
+            public Reader open(String filename) throws FileNotFoundException {
                 return new Reader() {
 
                     @Override
@@ -106,7 +100,7 @@ public class FileLoaderTest {
                     }
                 };
             }
-            
+
         });
         loader.addObserver(new FileLoader.Observer() {
 

@@ -92,7 +92,7 @@ public class REPL {
 
                     @Override
                     public void load(String name) {
-                        final FileLoader loader = FileLoader.create(new FileLoader.Implementor() {
+                        final FileLoader loader = new FileLoader(new FileLoader.DefaultImplementor() {
 
                             @Override
                             public void storeFunctions(Reader reader) {

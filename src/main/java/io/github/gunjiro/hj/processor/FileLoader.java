@@ -9,35 +9,28 @@ import java.util.List;
 
 public class FileLoader {
     private final Implementor implementor;
-    private final Factory factory;
     private final List<Observer> observers = new LinkedList<>();
 
     public static interface Implementor {
+        public Reader open(String filename) throws FileNotFoundException;
         public void storeFunctions(Reader reader);
     }
 
-    public static interface Factory {
-        public Reader createReader(String filename) throws FileNotFoundException;
+    public static abstract class DefaultImplementor implements Implementor {
+
+        @Override
+        public Reader open(String filename) throws FileNotFoundException {
+            return new FileReader(filename);
+        }
+
     }
 
     public static interface Observer {
         public void receiveMessage(String message);
     }
 
-    public FileLoader(Implementor implementor, Factory factory) {
+    public FileLoader(Implementor implementor) {
         this.implementor = implementor;
-        this.factory = factory;
-    }
-
-    public static FileLoader create(Implementor implementor) {
-        return new FileLoader(implementor, new Factory() {
-
-            @Override
-            public Reader createReader(String filename) throws FileNotFoundException {
-                return new FileReader(filename);
-            }
-            
-        });
     }
 
     public void addObserver(Observer observer) {
@@ -45,7 +38,7 @@ public class FileLoader {
     }
 
     public void load(String filename) {
-        try (Reader reader = factory.createReader(filename)) {
+        try (Reader reader = implementor.open(filename)) {
             implementor.storeFunctions(reader);
             notifyObserversOfMessage("loaded: " + filename);
         } catch (FileNotFoundException e) {

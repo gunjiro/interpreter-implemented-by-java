@@ -45,13 +45,11 @@ public class LoadTest {
                         }
                     }
 
-                }, new FileLoader.Factory() {
-
                     @Override
-                    public Reader createReader(String filename) throws FileNotFoundException {
+                    public Reader open(String filename) throws FileNotFoundException {
                         return new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(filename));
                     }
-                    
+
                 });
                 loader.load(name);
             }
