@@ -34,9 +34,26 @@ class AppREPLImplementor implements REPL.Implementor {
     }
 
     @Override
+    public void showQuitMessage() {
+        printMessage("Bye.");
+    }
+
+    @Override
     public REPL.Result execute(String input) {
         operate(input);
         return isExited ? REPL.Result.Quit : REPL.Result.Continue;
+    }
+
+    private void printMessage(String message) {
+        System.out.println(message);
+    }
+
+    private void printText(String text) {
+        System.out.print(text);
+    }
+
+    private void startANewLine() {
+        System.out.println();
     }
 
     private void operate(String input) {
@@ -59,12 +76,12 @@ class AppREPLImplementor implements REPL.Implementor {
 
             @Override
             public void sendText(String text) {
-                System.out.print(text);
+                printText(text);
             }
            
             @Override
             public void sendMessage(String message) {
-                System.out.println(message);
+                printMessage(message);
             }
 
             @Override
@@ -76,7 +93,7 @@ class AppREPLImplementor implements REPL.Implementor {
                         try {
                             environment.addFunctions(reader);
                         } catch (ApplicationException e) {
-                            sendMessage(e.getMessage());
+                            printMessage(e.getMessage());
                         }
                     }
                     
@@ -85,7 +102,7 @@ class AppREPLImplementor implements REPL.Implementor {
 
                     @Override
                     public void receiveMessage(String message) {
-                        sendMessage(message);
+                        printMessage(message);
                     }
 
                 });
@@ -94,7 +111,7 @@ class AppREPLImplementor implements REPL.Implementor {
 
             @Override
             public void sendBreak() {
-                System.out.println();
+                startANewLine();
             }
 
         }, new AppRequestOperator.Factory() {
@@ -105,11 +122,6 @@ class AppREPLImplementor implements REPL.Implementor {
             }
             
         });
-    }
-
-    @Override
-    public void showQuitMessage() {
-        System.out.println("Bye.");
     }
 
 }
