@@ -41,13 +41,12 @@ public class REPL {
         this.implementor = implementor;
     }
 
-    public static REPL create(Environment environment, OutputOperation outOperation) {
+    public static REPL create(Environment environment, OutputOperation outOperation, InputReceiver receiver) {
         return new REPL(new Implementor() {
             private boolean isExited = false;
 
             @Override
             public String waitForInput() {
-                final InputReceiver receiver = SystemInInputReceiver.create();
                 return receiver.receive();
             }
 
