@@ -4,6 +4,7 @@ import java.io.Reader;
 import java.io.StringReader;
 
 import io.github.gunjiro.hj.processor.FileLoader;
+import io.github.gunjiro.hj.ui.OutputOperation;
 
 public class REPL {
     public static interface Implementor {
@@ -40,7 +41,7 @@ public class REPL {
         this.implementor = implementor;
     }
 
-    public static REPL create(Environment environment) {
+    public static REPL create(Environment environment, OutputOperation outOperation) {
         return new REPL(new Implementor() {
             private boolean isExited = false;
 
@@ -52,25 +53,13 @@ public class REPL {
 
             @Override
             public void showQuitMessage() {
-                printMessage("Bye.");
+                outOperation.printMessage("Bye.");
             }
 
             @Override
             public REPL.Result execute(String input) {
                 operate(input);
                 return isExited ? REPL.Result.Quit : REPL.Result.Continue;
-            }
-
-            private void printMessage(String message) {
-                System.out.println(message);
-            }
-
-            private void printText(String text) {
-                System.out.print(text);
-            }
-
-            private void startANewLine() {
-                System.out.println();
             }
 
             private void operate(String input) {
@@ -93,12 +82,12 @@ public class REPL {
 
                     @Override
                     public void sendText(String text) {
-                        printText(text);
+                        outOperation.printText(text);
                     }
 
                     @Override
                     public void sendMessage(String message) {
-                        printMessage(message);
+                        outOperation.printMessage(message);
                     }
 
                     @Override
@@ -110,7 +99,7 @@ public class REPL {
                                 try {
                                     environment.addFunctions(reader);
                                 } catch (ApplicationException e) {
-                                    printMessage(e.getMessage());
+                                    outOperation.printMessage(e.getMessage());
                                 }
                             }
 
@@ -119,7 +108,7 @@ public class REPL {
 
                             @Override
                             public void receiveMessage(String message) {
-                                printMessage(message);
+                                outOperation.printMessage(message);
                             }
 
                         });
@@ -128,7 +117,7 @@ public class REPL {
 
                     @Override
                     public void sendBreak() {
-                        startANewLine();
+                        outOperation.startANewLine();
                     }
 
                 }, new AppRequestOperator.Factory() {
