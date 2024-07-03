@@ -1,55 +1,97 @@
 package io.github.gunjiro.driver.hj;
 
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.LinkedList;
+import java.io.StringReader;
 import java.util.List;
 
 import org.junit.Test;
 
-import io.github.gunjiro.hj.App;
-import io.github.gunjiro.hj.AppFactory;
+import io.github.gunjiro.hj.AppRequestOperator;
+import io.github.gunjiro.hj.ApplicationException;
 import io.github.gunjiro.hj.DefaultEnvironment;
-import io.github.gunjiro.hj.InputReceiver;
-import io.github.gunjiro.hj.MessagePrinter;
-import io.github.gunjiro.hj.ResourceProvider;
-import io.github.gunjiro.hj.StringPrinter;
+import io.github.gunjiro.hj.Environment;
+import io.github.gunjiro.hj.RequestFactory;
+import io.github.gunjiro.hj.Thunk;
+import io.github.gunjiro.hj.processor.FileLoader;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class LoadTest {
-    // 宣言の読み込みと評価した値の出力
+
     @Test
-    public void testLoadAndOutputValue() {
-        final LinkedList<String> inputs = new LinkedList<String>(List.of(":l napier.hj functions.hj", "take 10 napier", ":q"));
+    public void loadAndEvaluate() {
+        final StringBuilder output = new StringBuilder();
+
+        final List<String> resouces = List.of("napier.hj","functions.hj");
+        final String expression = "take 10 napier";
         final String expected = "[2,7,1,8,2,8,1,8,2,8]";
-        final StringBuilder builder = new StringBuilder();
-        final AppFactory factory = new AppFactory();
-        final App app = factory.create(new InputReceiver() {
-            @Override
-            public String receive() {
-                assert !inputs.isEmpty() : "..... already received all inputs. .....";
-                return inputs.pop();
-            }
-        }, new ResourceProvider() {
-            @Override
-            public Reader open(String name) throws FailedException {
-                return new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(name));
-            }
-        }, new StringPrinter() {
-            @Override
-            public void print(String s) {
-                builder.append(s);
-            }
-        }, new MessagePrinter() {
-            @Override
-            public void printMessage(String message) {
-            }
-        }, new DefaultEnvironment());
 
-        app.run();
+        final Environment environment = new DefaultEnvironment();
+        final AppRequestOperator operator = new AppRequestOperator(new AppRequestOperator.Implementor() {
 
-        assertThat(builder.toString(), is(expected));
+            @Override
+            public void load(String name) {
+                final FileLoader loader = new FileLoader(new FileLoader.Implementor() {
+
+                    @Override
+                    public void storeFunctions(Reader reader) {
+                        try {
+                            environment.addFunctions(reader);
+                        } catch (ApplicationException e) {
+                            sendMessage(e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void sendMessage(String message) {
+                    }
+                    
+                }, new FileLoader.Factory() {
+
+                    @Override
+                    public Reader createReader(String filename) throws FileNotFoundException {
+                        return new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(filename));
+                    }
+                    
+                });
+                loader.load(name);
+            }
+
+            @Override
+            public void quit() {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'quit'");
+            }
+
+            @Override
+            public void sendText(String text) {
+                output.append(text);
+            }
+
+            @Override
+            public void sendBreak() {
+            }
+
+            @Override
+            public void sendMessage(String message) {
+            }
+            
+        }, new AppRequestOperator.Factory() {
+
+            @Override
+            public Thunk createThunk(String code) throws ApplicationException {
+                return environment.createThunk(new StringReader(code));
+            }
+            
+        });
+        for (String resource : resouces) {
+            operator.operate((new RequestFactory()).createRequest(String.format(":l %s", resource)));
+        }
+        operator.operate((new RequestFactory()).createRequest(expression));
+
+        assertThat(output, hasToString(expected));
     }
 }
