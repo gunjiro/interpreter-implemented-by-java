@@ -58,7 +58,6 @@ public class LoadTest {
 
             @Override
             public void quit() {
-                // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'quit'");
             }
 
