@@ -3,8 +3,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 public class LineReader {
-    public String read(BufferedReader reader) throws IOException {
-        final String line = reader.readLine();
+    private final Factory factory;
+
+    public static interface Factory {
+        public BufferedReader createBufferedReader();
+    }
+
+    public LineReader(Factory factory) {
+        this.factory = factory;
+    }
+
+    public String read() throws IOException {
+        final String line = factory.createBufferedReader().readLine();
         if (line == null) {
             throw new IOException("the end of the stream has been reached");
         }

@@ -7,15 +7,18 @@ import java.io.IOException;
 public class InputReceiver {
 
     public String receive() throws IOException {
-        return createLineReader().read(createBufferedReader());
+        return createLineReader().read();
     }
 
     private static LineReader createLineReader() {
-        return new LineReader();
-    }
+        return new LineReader(new LineReader.Factory() {
 
-    private static BufferedReader createBufferedReader() {
-        return new BufferedReader(new InputStreamReader(System.in));
+            @Override
+            public BufferedReader createBufferedReader() {
+                return new BufferedReader(new InputStreamReader(System.in));
+            }
+            
+        });
     }
 
 }
