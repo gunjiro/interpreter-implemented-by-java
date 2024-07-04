@@ -5,20 +5,15 @@ public class AppInformation {
 
     public static enum State {
         RUNNING,
-        STOPPING;
-
-        public boolean isRunning() {
-            return this.equals(RUNNING);
-        }
+        STOPPING
     }
 
     public void changeStopping() {
         state = State.STOPPING;
     }
 
-    public State getState() {
-        assert (state != null) : "..... state is null .....";
-        return state;
+    public boolean isStateRunning() {
+        return State.RUNNING.equals(state);
     }
 
 }

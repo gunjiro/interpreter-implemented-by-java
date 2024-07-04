@@ -112,7 +112,7 @@ public class REPL {
 
             @Override
             public boolean isRunning() {
-                return information.getState().isRunning();
+                return information.isStateRunning();
             }
         });
     }
