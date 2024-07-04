@@ -26,6 +26,7 @@ public class REPL {
 
             @Override
             public String waitForInput() {
+                outOperation.printText("> ");
                 return receiver.receive();
             }
 
