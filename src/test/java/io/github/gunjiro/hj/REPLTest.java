@@ -37,4 +37,32 @@ public class REPLTest {
         assertThat(messages, hasSize(5));
     }
 
+    @Test
+    public void printMessageWhenExecuteQuitCommand() {
+        // 終了コマンド実行時にメッセージ出力
+        final StringBuilder output = new StringBuilder();
+
+        final Deque<String> inputs = new LinkedList<>(List.of( ":q"));
+        final REPL repl = REPL.create(new DefaultEnvironment(), new OutputOperation() {
+
+            @Override
+            public void printMessage(String message) {
+                output.append(message);
+            }
+
+        }, new InputReceiver() {
+
+            @Override
+            public String receive() {
+                assert !inputs.isEmpty() : "..... already received all inputs .....";
+                return inputs.pop();
+            }
+            
+        }, new AppInformation());
+        repl.run();
+
+        assertThat(output, hasToString("Bye."));
+    }
+
+
 }
