@@ -1,5 +1,6 @@
 package io.github.gunjiro.hj;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
@@ -27,7 +28,13 @@ public class REPL {
             @Override
             public String waitForInput() {
                 outOperation.printText("> ");
-                return receiver.receive();
+                try {
+                    return receiver.receive();
+                } catch (IOException e) {
+                    outOperation.printMessage(e.getMessage());
+                    information.changeStopping();
+                    return "";
+                }
             }
 
             @Override
