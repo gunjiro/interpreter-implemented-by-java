@@ -7,11 +7,14 @@ public class SystemInInputReceiver implements InputReceiver {
 
     @Override
     public String receive() {
-        final LineReader reader = new LineReader();
-        return reader.read(createBufferedReader());
+        return createLineReader().read(createBufferedReader());
     }
 
-    private BufferedReader createBufferedReader() {
+    private static LineReader createLineReader() {
+        return new LineReader();
+    }
+
+    private static BufferedReader createBufferedReader() {
         return new BufferedReader(new InputStreamReader(System.in));
     }
 
