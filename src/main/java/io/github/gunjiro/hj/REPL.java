@@ -17,9 +17,6 @@ public class REPL {
 
     private final Implementor implementor;
 
-    /**
-     * @param implementor 外部で定義する実装
-     */
     public REPL(Implementor implementor) {
         this.implementor = implementor;
     }
@@ -117,11 +114,7 @@ public class REPL {
         });
     }
 
-    /**
-     * REPLを実行する。
-     */
     public void run() {
-        assert true;
         do {
             final String input = implementor.waitForInput();
             implementor.execute(input);
