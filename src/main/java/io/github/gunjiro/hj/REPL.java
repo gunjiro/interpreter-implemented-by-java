@@ -23,7 +23,20 @@ public class REPL {
     }
 
     public static REPL create(Environment environment, OutputOperation outOperation, InputReceiver receiver, AppInformation information) {
-        return new REPL(new Implementor() {
+        return new REPL(createImplementor(environment, outOperation, receiver, information));
+    }
+
+    public void run() {
+        do {
+            final String input = implementor.waitForInput();
+            implementor.execute(input);
+        } while (implementor.isRunning());
+
+        implementor.showQuitMessage();
+    }
+
+    private static Implementor createImplementor(Environment environment, OutputOperation outOperation, InputReceiver receiver, AppInformation information) {
+        return new Implementor() {
 
             @Override
             public String waitForInput() {
@@ -119,16 +132,6 @@ public class REPL {
             public boolean isRunning() {
                 return information.isStateRunning();
             }
-        });
+        };
     }
-
-    public void run() {
-        do {
-            final String input = implementor.waitForInput();
-            implementor.execute(input);
-        } while (implementor.isRunning());
-
-        implementor.showQuitMessage();
-    }
-
 }
