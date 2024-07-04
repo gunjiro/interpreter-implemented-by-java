@@ -3,33 +3,16 @@ package io.github.gunjiro.hj;
 import java.io.Reader;
 import java.io.StringReader;
 
+import io.github.gunjiro.hj.app.AppInformation;
 import io.github.gunjiro.hj.processor.FileLoader;
 import io.github.gunjiro.hj.ui.OutputOperation;
 
 public class REPL {
     public static interface Implementor {
-        /**
-         * 入力待ちをする。
-         * @return 入力された文字列
-         */
         public String waitForInput();
-
-        /**
-         * 入力された文字列を解析して実行する。
-         * @param input 入力された文字列
-         * @return 入力待ちを繰り返すか終了するか
-         */
-        public REPL.Result execute(String input);
-
-        /**
-         * 終了時のメッセージを表示する。
-         */
+        public void execute(String input);
         public void showQuitMessage();
-    }
-    
-    public static enum Result {
-        Continue,
-        Quit,
+        public boolean isRunning();
     }
 
     private final Implementor implementor;
@@ -41,9 +24,8 @@ public class REPL {
         this.implementor = implementor;
     }
 
-    public static REPL create(Environment environment, OutputOperation outOperation, InputReceiver receiver) {
+    public static REPL create(Environment environment, OutputOperation outOperation, InputReceiver receiver, AppInformation information) {
         return new REPL(new Implementor() {
-            private boolean isExited = false;
 
             @Override
             public String waitForInput() {
@@ -56,9 +38,8 @@ public class REPL {
             }
 
             @Override
-            public REPL.Result execute(String input) {
+            public void execute(String input) {
                 operate(input);
-                return isExited ? REPL.Result.Quit : REPL.Result.Continue;
             }
 
             private void operate(String input) {
@@ -76,7 +57,7 @@ public class REPL {
 
                     @Override
                     public void quit() {
-                        isExited = true;
+                        information.changeStopping();
                     }
 
                     @Override
@@ -128,6 +109,11 @@ public class REPL {
 
                 });
             }
+
+            @Override
+            public boolean isRunning() {
+                return information.getState().isRunning();
+            }
         });
     }
 
@@ -135,12 +121,11 @@ public class REPL {
      * REPLを実行する。
      */
     public void run() {
-        REPL.Result result = REPL.Result.Quit;
-
+        assert true;
         do {
             final String input = implementor.waitForInput();
-            result = implementor.execute(input);
-        } while (REPL.Result.Continue.equals(result));
+            implementor.execute(input);
+        } while (implementor.isRunning());
 
         implementor.showQuitMessage();
     }

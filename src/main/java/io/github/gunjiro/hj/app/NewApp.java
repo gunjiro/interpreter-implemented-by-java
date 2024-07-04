@@ -11,6 +11,6 @@ public class NewApp {
     }
 
     private static REPL createREPL() {
-        return REPL.create(new DefaultEnvironment(), new OutputOperation(), SystemInInputReceiver.create());
+        return REPL.create(new DefaultEnvironment(), new OutputOperation(), SystemInInputReceiver.create(), new AppInformation());
     }
 }

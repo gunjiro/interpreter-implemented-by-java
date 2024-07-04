@@ -2,6 +2,7 @@ package io.github.gunjiro.hj;
 
 import org.junit.Test;
 
+import io.github.gunjiro.hj.app.AppInformation;
 import io.github.gunjiro.hj.ui.OutputOperation;
 
 import static org.hamcrest.Matchers.*;
@@ -29,7 +30,7 @@ public class REPLTest {
                 return inputs.pop();
             }
             
-        });
+        }, new AppInformation());
 
         repl.run();
 
