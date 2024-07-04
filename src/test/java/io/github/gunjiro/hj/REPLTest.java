@@ -64,5 +64,31 @@ public class REPLTest {
         assertThat(output, hasToString("Bye."));
     }
 
+    @Test
+    public void printMessageWhenExecuteUnknownCommand() {
+        // 存在しないコマンドを入力するとメッセージを出力する
+        final Deque<String> output = new LinkedList<>();
+
+        final Deque<String> inputs = new LinkedList<>(List.of( ":nothing", ":q"));
+        final REPL repl = REPL.create(new DefaultEnvironment(), new OutputOperation() {
+
+            @Override
+            public void printMessage(String message) {
+                output.add(message);
+            }
+
+        }, new InputReceiver() {
+
+            @Override
+            public String receive() {
+                assert !inputs.isEmpty() : "..... already received all inputs .....";
+                return inputs.pop();
+            }
+            
+        }, new AppInformation());
+        repl.run();
+
+        assertThat(output, hasItem("unknown command ':nothing'"));
+    }
 
 }
