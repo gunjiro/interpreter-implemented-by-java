@@ -9,6 +9,8 @@ import io.github.gunjiro.hj.processor.FileLoader;
 import io.github.gunjiro.hj.ui.OutputOperation;
 
 public class REPL {
+    private final Implementor implementor;
+
     public static interface Implementor {
         public String waitForInput();
         public void execute(String input);
@@ -16,14 +18,19 @@ public class REPL {
         public boolean isRunning();
     }
 
-    private final Implementor implementor;
-
     public REPL(Implementor implementor) {
         this.implementor = implementor;
     }
 
-    public static REPL create(Environment environment, OutputOperation outOperation, InputReceiver receiver, AppInformation information) {
-        return new REPL(createImplementor(environment, outOperation, receiver, information));
+    public static interface Factory {
+        public Environment createEnvironment();
+        public OutputOperation createOutputOperation();
+        public InputReceiver createInputReceiver();
+        public AppInformation createAppInformation();
+    }
+
+    public static REPL create(Factory factory) {
+        return new REPL(createImplementor(factory));
     }
 
     public void run() {
@@ -35,7 +42,12 @@ public class REPL {
         implementor.showQuitMessage();
     }
 
-    private static Implementor createImplementor(Environment environment, OutputOperation outOperation, InputReceiver receiver, AppInformation information) {
+    private static Implementor createImplementor(Factory factory) {
+        final Environment environment = factory.createEnvironment();
+        final OutputOperation outOperation = factory.createOutputOperation();
+        final InputReceiver receiver = factory.createInputReceiver();
+        final AppInformation information = factory.createAppInformation();
+
         return new Implementor() {
 
             @Override

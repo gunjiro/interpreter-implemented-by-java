@@ -21,17 +21,38 @@ public class REPLTest {
         final Deque<String> messages = new LinkedList<>();
 
         final Deque<String> inputs = new LinkedList<>(List.of("", "", "", "", ":q"));
-        final REPL repl = REPL.create(new DefaultEnvironment(), new OutputOperation(), new InputReceiver() {
+        final REPL repl = REPL.create(new REPL.Factory() {
 
             @Override
-            public String receive() {
-                assert !inputs.isEmpty() : "..... already received all inputs .....";
-                messages.add("..... received .....");
-                return inputs.pop();
+            public Environment createEnvironment() {
+                return new DefaultEnvironment();
+            }
+
+            @Override
+            public OutputOperation createOutputOperation() {
+                return new OutputOperation();
+            }
+
+            @Override
+            public InputReceiver createInputReceiver() {
+                return new InputReceiver() {
+
+                    @Override
+                    public String receive() {
+                        assert !inputs.isEmpty() : "..... already received all inputs .....";
+                        messages.add("..... received .....");
+                        return inputs.pop();
+                    }
+
+                };
+            }
+
+            @Override
+            public AppInformation createAppInformation() {
+                return new AppInformation();
             }
             
-        }, new AppInformation());
-
+        });
         repl.run();
 
         assertThat(messages, hasSize(5));
@@ -43,22 +64,44 @@ public class REPLTest {
         final StringBuilder output = new StringBuilder();
 
         final Deque<String> inputs = new LinkedList<>(List.of( ":q"));
-        final REPL repl = REPL.create(new DefaultEnvironment(), new OutputOperation() {
+        final REPL repl = REPL.create(new REPL.Factory() {
 
             @Override
-            public void printMessage(String message) {
-                output.append(message);
+            public Environment createEnvironment() {
+                return new DefaultEnvironment();
             }
 
-        }, new InputReceiver() {
+            @Override
+            public OutputOperation createOutputOperation() {
+                return new OutputOperation() {
+
+                    @Override
+                    public void printMessage(String message) {
+                        output.append(message);
+                    }
+
+                };
+            }
 
             @Override
-            public String receive() {
-                assert !inputs.isEmpty() : "..... already received all inputs .....";
-                return inputs.pop();
+            public InputReceiver createInputReceiver() {
+                return new InputReceiver() {
+
+                    @Override
+                    public String receive() {
+                        assert !inputs.isEmpty() : "..... already received all inputs .....";
+                        return inputs.pop();
+                    }
+                    
+                };
+            }
+
+            @Override
+            public AppInformation createAppInformation() {
+                return new AppInformation();
             }
             
-        }, new AppInformation());
+        });
         repl.run();
 
         assertThat(output, hasToString("Bye."));
@@ -70,22 +113,44 @@ public class REPLTest {
         final Deque<String> output = new LinkedList<>();
 
         final Deque<String> inputs = new LinkedList<>(List.of( ":nothing", ":q"));
-        final REPL repl = REPL.create(new DefaultEnvironment(), new OutputOperation() {
+        final REPL repl = REPL.create(new REPL.Factory() {
 
             @Override
-            public void printMessage(String message) {
-                output.add(message);
+            public Environment createEnvironment() {
+                return new DefaultEnvironment();
             }
 
-        }, new InputReceiver() {
+            @Override
+            public OutputOperation createOutputOperation() {
+                return new OutputOperation() {
+
+                    @Override
+                    public void printMessage(String message) {
+                        output.add(message);
+                    }
+
+                };
+            }
 
             @Override
-            public String receive() {
-                assert !inputs.isEmpty() : "..... already received all inputs .....";
-                return inputs.pop();
+            public InputReceiver createInputReceiver() {
+                return new InputReceiver() {
+
+                    @Override
+                    public String receive() {
+                        assert !inputs.isEmpty() : "..... already received all inputs .....";
+                        return inputs.pop();
+                    }
+
+                };
+            }
+
+            @Override
+            public AppInformation createAppInformation() {
+                return new AppInformation();
             }
             
-        }, new AppInformation());
+        });
         repl.run();
 
         assertThat(output, hasItem("unknown command ':nothing'"));
