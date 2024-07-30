@@ -12,6 +12,7 @@ public class REPL {
     private final Implementor implementor;
 
     public static interface Implementor {
+        public void showPrompt();
         public String waitForInput();
         public void execute(String input);
         public void showQuitMessage();
@@ -35,6 +36,7 @@ public class REPL {
 
     public void run() {
         do {
+            implementor.showPrompt();
             final String input = implementor.waitForInput();
             implementor.execute(input);
         } while (implementor.isRunning());
@@ -51,8 +53,12 @@ public class REPL {
         return new Implementor() {
 
             @Override
-            public String waitForInput() {
+            public void showPrompt() {
                 outOperation.printText("> ");
+            }
+
+            @Override
+            public String waitForInput() {
                 try {
                     return receiver.receive();
                 } catch (IOException e) {
@@ -144,6 +150,7 @@ public class REPL {
             public boolean isRunning() {
                 return information.isStateRunning();
             }
+
         };
     }
 }
