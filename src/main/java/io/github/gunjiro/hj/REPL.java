@@ -15,8 +15,8 @@ public class REPL {
         public void showPrompt();
         public String waitForInput();
         public void execute(String input);
-        public void showQuitMessage();
         public boolean isRunning();
+        public void showQuitMessage();
     }
 
     public REPL(Implementor implementor) {
